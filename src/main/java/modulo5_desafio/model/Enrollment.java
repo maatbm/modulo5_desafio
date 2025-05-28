@@ -20,7 +20,7 @@ public class Enrollment {
     private Course course;
 
     @Column(name = "enrollment_date", nullable = false)
-    private LocalDate EnrollmentDate;
+    private LocalDate enrollmentDate;
 
     public Long getId() {
         return id;
@@ -43,10 +43,10 @@ public class Enrollment {
     }
 
     public LocalDate getEnrollmentDate() {
-        return EnrollmentDate;
+        return enrollmentDate;
     }
 
     public void setEnrollmentDate(LocalDate enrollmentDate) {
-        EnrollmentDate = enrollmentDate;
+        this.enrollmentDate = enrollmentDate;
     }
 }
