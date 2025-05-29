@@ -223,13 +223,43 @@ public class Modulo5DesafioApplication {
 			return;
 		}
 
-		Enrollment enrollment = new Enrollment();
-		enrollment.setStudent(student);
-		enrollment.setCourse(course);
-		enrollment.setEnrollmentDate(LocalDate.now());
-		enrollmentRepository.save(enrollment);
-		System.out.println("Matrícula registrada com sucesso!");
-	}
+    private static void registerEnrollment() {
+        System.out.println("\n=== Registrar Matrícula ===");
+        try {
+            if (studentRepository.count() == 0 || courseRepository.count() == 0) {
+                System.err.println("Nenhum aluno ou curso registrado. Por favor, registre um aluno e um curso primeiro.");
+            } else {
+                System.out.print("Insira o ID do aluno: ");
+                String studentId = scanner.nextLine();
+                System.out.print("Insira o ID do curso: ");
+                String courseId = scanner.nextLine();
+                long studentIdLong = Long.parseLong(studentId);
+                long courseIdLong = Long.parseLong(courseId);
+                if (studentIdLong <= 0 || courseIdLong <= 0) {
+                    System.err.println("IDs devem ser números positivos. Tente novamente.");
+                } else {
+                    Student student = studentRepository.findById(studentIdLong).orElse(null);
+                    Course course = courseRepository.findById(courseIdLong).orElse(null);
+                    if (student == null) {
+                        System.err.println("Nenhum aluno encontrado com o ID: " + studentIdLong);
+                    } else if (course == null) {
+                        System.err.println("Nenhum curso encontrado com o ID: " + courseIdLong);
+                    } else if (enrollmentRepository.findByStudentIdAndCourseId(studentIdLong, courseIdLong).isPresent()) {
+                        System.err.println("Este aluno já está matriculado neste curso.");
+                    } else {
+                        Enrollment enrollment = new Enrollment(student, course, LocalDate.now());
+                        enrollmentRepository.save(enrollment);
+                        System.out.println("Matrícula registrada com sucesso!");
+                    }
+                    Thread.sleep(200); // Atraso forçado, pois sem isso há conflito das mensagens de erro com a interface principal
+                }
+            }
+        } catch (NumberFormatException e) {
+            System.err.println("Erro: IDs devem ser números inteiros positivos. Tente novamente.");
+        } catch (Exception e) {
+            System.err.println("Ocorreu um erro inesperado: " + e.getMessage() + ". Tente novamente.");
+        }
+    }
 
 	private static void listEnrollments() {
 		List<Enrollment> enrollments = enrollmentRepository.findAll();
