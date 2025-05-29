@@ -22,6 +22,13 @@ public class Enrollment {
     @Column(name = "enrollment_date", nullable = false)
     private LocalDate enrollmentDate;
 
+    public Enrollment(){}
+    public Enrollment(Student student, Course course, LocalDate enrollmentDate) {
+        this.student = student;
+        this.course = course;
+        this.enrollmentDate = enrollmentDate;
+    }
+
     public Long getId() {
         return id;
     }
