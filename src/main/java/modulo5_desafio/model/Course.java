@@ -15,7 +15,7 @@ public class Course {
     @Column(nullable = false, unique = true)
     private String title;
 
-    @Column(nullable = false, length = 650, unique = true)
+    @Column(nullable = false, length = 650)
     private String description;
 
     @Column(name = "duration_hours", nullable = false)
