@@ -161,8 +161,23 @@ public class Modulo5DesafioApplication {
 	}
 
 	private static void listCourses() {
-		List<Course> courses = courseRepository.findAll();
-		courses.forEach(c -> System.out.println("ID: " + c.getId() + ", Título: " + c.getTitle() + ", Descrição: " + c.getDescription() + ", Duração: " + c.getDurationHours()));
+		System.out.println("\n=== Lista de Cursos ===");
+		try {
+			List<Course> courses = courseRepository.findAll();
+			if (courses.isEmpty()) {
+				System.err.println("Nenhum curso registrado.");
+			} else {
+				courses.forEach(c -> {
+					System.out.println("ID: " + c.getId());
+					System.out.println("Título: " + c.getTitle());
+					System.out.println("Descrição: " + c.getDescription());
+					System.out.println("Duração (horas): " + c.getDurationHours());
+					System.out.println("------------------------");
+				});
+			}
+		} catch (Exception e) {
+			System.err.println("Erro ao listar cursos: " + e.getMessage());
+		}
 	}
 
 	private static void findCourseByName() {
