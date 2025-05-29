@@ -50,7 +50,7 @@ public class Modulo5DesafioApplication {
 				case 3 -> findStudentByEmail();
 				case 4 -> registerCourse();
 				case 5 -> listCourses();
-				case 6 -> findCourseByName();
+				case 6 -> findCourseByTitle();
 				case 7 -> registerEnrollment();
 				case 8 -> listEnrollments();
 				case 9 -> generateEngagementReport();
@@ -182,12 +182,30 @@ public class Modulo5DesafioApplication {
 		}
 	}
 
-	private static void findCourseByName() {
-		System.out.print("Insira o título do curso (ou parte dele): ");
-		String name = scanner.nextLine();
-		List<Course> courses = courseRepository.findByTitleContainingIgnoreCase(name);
-		courses.forEach(c -> System.out.println("ID: " + c.getId() + ", título: " + c.getTitle() + ", Descrição: " + c.getDescription() + ", Duração: " + c.getDurationHours()));
-		if (courses.isEmpty()) System.out.println("Nenhum curso encontrado com o título: " + name);
+	private static void findCourseByTitle() {
+		System.out.println("\n=== Buscar Curso por Título ===");
+		try{
+			System.out.print("Insira o título do curso (ou parte dele): ");
+			String title = scanner.nextLine();
+			if (title == null || title.isBlank()) {
+				System.err.println("O título não pode estar vazio. Tente novamente.");
+			}else {
+				List<Course> courses = courseRepository.findByTitleContainingIgnoreCase(title);
+				if (courses.isEmpty()) {
+					System.err.println("Nenhum curso encontrado com o título: " + title);
+				} else {
+					courses.forEach(c -> {
+						System.out.println("ID: " + c.getId());
+						System.out.println("Título: " + c.getTitle());
+						System.out.println("Descrição: " + c.getDescription());
+						System.out.println("Duração (horas): " + c.getDurationHours());
+						System.out.println("------------------------");
+					});
+				}
+			}
+		} catch (Exception e) {
+			System.err.println("Erro ao buscar curso por título: " + e.getMessage());
+		}
 	}
 
 	private static void registerEnrollment() {
