@@ -75,23 +75,17 @@ public class Modulo5DesafioApplication {
 			LocalDate birthDate = LocalDate.parse(scanner.nextLine());
 			if(name == null || name.isBlank() || email == null || email.isBlank()) {
 				System.err.println("Todos os campos devem estar preenchidos. Tente novamente.");
-				return;
 			} else if (birthDate.isAfter(LocalDate.now())) {
 				System.err.println("Data de nascimento não pode ser no futuro. Tente novamente.");
-				return;
 			}else if (!email.contains("@")) {
 				System.err.println("Email inválido. Tente novamente.");
-				return;
 			} else if (studentRepository.findByEmail(email).isPresent()) {
 				System.err.println("Já existe um aluno registrado com este email. Tente novamente.");
-				return;
+			}else {
+				Student student = new Student(name, email, birthDate);
+				studentRepository.save(student);
+				System.out.println("Aluno registrado com sucesso!");
 			}
-			Student student = new Student();
-			student.setName(name);
-			student.setEmail(email);
-			student.setBirthDate(birthDate);
-			studentRepository.save(student);
-			System.out.println("Aluno registrado com sucesso!");
 		}catch (Exception e) {
 			System.err.println("Erro ao registrar aluno: " + e.getMessage() + ". Tente novamente.");
 		}
