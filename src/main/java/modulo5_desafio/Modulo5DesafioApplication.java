@@ -92,8 +92,23 @@ public class Modulo5DesafioApplication {
 	}
 
 	private static void listStudents() {
-		List<Student> students = studentRepository.findAll();
-		students.forEach(s -> System.out.println("ID: " + s.getId() + ", Nome: " + s.getName() + ", Email: " + s.getEmail() + ", Data de nascimento: " + s.getBirthDate()));
+		System.out.println("\n=== Lista de Alunos ===");
+		try {
+			List<Student> students = studentRepository.findAll();
+			if (students.isEmpty()) {
+				System.err.println("Nenhum aluno registrado.");
+			} else {
+				students.forEach(s -> {
+					System.out.println("ID: " + s.getId());
+					System.out.println("Nome: " + s.getName());
+					System.out.println("Email: " + s.getEmail());
+					System.out.println("Data de nascimento: " + s.getBirthDate());
+					System.out.println("------------------------");
+				});
+			}
+		}catch (Exception e) {
+			System.err.println("Erro ao listar alunos: " + e.getMessage());
+		}
 	}
 
 	private static void findStudentByEmail() {
