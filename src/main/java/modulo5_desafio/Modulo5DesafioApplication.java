@@ -11,7 +11,6 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.ApplicationContext;
 
 import java.time.LocalDate;
-import java.time.Period;
 import java.util.List;
 import java.util.Scanner;
 
@@ -268,26 +267,28 @@ public class Modulo5DesafioApplication {
     }
 
     private static void generateEngagementReport() {
-        List<Course> courses = courseRepository.findAll();
-        System.out.println("\n=== Relatório ===");
-        for (Course course : courses) {
-            List<Enrollment> enrollments = course.getEnrollments();
-            long totalStudents = enrollments.size();
-
-            double averageAge = enrollments.stream()
-                    .map(e -> Period.between(e.getStudent().getBirthDate(), LocalDate.now()).getYears())
-                    .mapToInt(Integer::intValue)
-                    .average()
-                    .orElse(0.0);
-
-            long recentEnrollments = enrollmentRepository.findByCourseIdAndEnrollmentDateAfter(
-                    course.getId(), LocalDate.now().minusDays(30)).size();
-
-            System.out.println("Curso: " + course.getTitle());
-            System.out.println("Total de estudantes: " + totalStudents);
-            System.out.printf("Idade média: %.2f years%n", averageAge);
-            System.out.println("Novas matrículas nos últimos 30 dias: " + recentEnrollments);
-            System.out.println("------------------------");
+        System.out.println("\n=== Relatório de Engajamento ===");
+        try{
+            List<Object[]> reportData = courseRepository.engagementReport();
+            if (reportData.isEmpty()) {
+                System.err.println("Nenhum dado de engajamento encontrado.");
+            } else {
+                for (Object[] row : reportData) {
+                    Long courseId = (Long) row[0];
+                    String courseTitle = (String) row[1];
+                    Long totalEnrollments = (Long) row[2];
+                    double averageAge = ((Number) row[3]).doubleValue();
+                    Long recentEnrollments = (Long) row[4];
+                    System.out.println("Curso ID: " + courseId);
+                    System.out.println("Título do Curso: " + courseTitle);
+                    System.out.println("Total de Matrículas: " + totalEnrollments);
+                    System.out.println("Idade Média dos Alunos: " + averageAge);
+                    System.out.println("Matrículas Recentes (últimos 30 dias): " + recentEnrollments);
+                    System.out.println("------------------------");
+                }
+            }
+        } catch (Exception e) {
+            System.err.println("Erro ao gerar relatório de engajamento: " + e.getMessage());
         }
     }
 }
