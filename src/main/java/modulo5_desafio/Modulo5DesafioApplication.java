@@ -65,6 +65,7 @@ public class Modulo5DesafioApplication {
 	}
 
 	private static void registerStudent() {
+		System.out.println("\n=== Registrar Aluno ===");
 		try {
 			System.out.print("Insira o nome: ");
 			String name = scanner.nextLine();
@@ -111,8 +112,8 @@ public class Modulo5DesafioApplication {
 	}
 
 	private static void findStudentByEmail() {
+		System.out.println("\n=== Buscar Aluno por Email ===");
 		try{
-			System.out.println("\n=== Buscar Aluno por Email ===");
 			System.out.print("Insira o email do aluno: ");
 			String email = scanner.nextLine();
 			if (email == null || email.isBlank()) {
@@ -136,6 +137,7 @@ public class Modulo5DesafioApplication {
 	}
 
 	private static void registerCourse() {
+		System.out.println("\n=== Registrar Curso ===");
 		try {
 			System.out.print("Insira o título do curso: ");
 			String title = scanner.nextLine();
