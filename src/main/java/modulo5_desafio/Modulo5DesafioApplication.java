@@ -248,8 +248,23 @@ public class Modulo5DesafioApplication {
     }
 
     private static void listEnrollments() {
-        List<Enrollment> enrollments = enrollmentRepository.findAll();
-        enrollments.forEach(e -> System.out.println("ID: " + e.getId() + ", Estudante: " + e.getStudent().getName() + ", Curso: " + e.getCourse().getTitle() + ", Data: " + e.getEnrollmentDate()));
+        System.out.println("\n=== Lista de Matrículas ===");
+        try {
+            List<Enrollment> enrollments = enrollmentRepository.findAll();
+            if (enrollments.isEmpty()) {
+                System.err.println("Nenhuma matrícula registrada.");
+            } else {
+                enrollments.forEach(e -> {
+                    System.out.println("ID: " + e.getId());
+                    System.out.println("Aluno: " + e.getStudent().getName() + " (ID: " + e.getStudent().getId() + ")");
+                    System.out.println("Curso: " + e.getCourse().getTitle() + " (ID: " + e.getCourse().getId() + ")");
+                    System.out.println("Data de matrícula: " + e.getEnrollmentDate());
+                    System.out.println("------------------------");
+                });
+            }
+        } catch (Exception e) {
+            System.err.println("Erro ao listar matrículas: " + e.getMessage());
+        }
     }
 
     private static void generateEngagementReport() {
