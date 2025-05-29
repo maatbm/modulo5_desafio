@@ -11,7 +11,6 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.ApplicationContext;
 import java.time.LocalDate;
 import java.time.Period;
-import java.util.InputMismatchException;
 import java.util.List;
 import java.util.Scanner;
 
@@ -137,20 +136,28 @@ public class Modulo5DesafioApplication {
 	}
 
 	private static void registerCourse() {
-		System.out.print("Insira o título do curso: ");
-		String name = scanner.nextLine();
-		System.out.print("Insira uma descrição: ");
-		String description = scanner.nextLine();
-		System.out.print("Insira a duração do curso (em horas): ");
-		int hours = scanner.nextInt();
-		scanner.nextLine();
-
-		Course course = new Course();
-		course.setTitle(name);
-		course.setDescription(description);
-		course.setDurationHours(hours);
-		courseRepository.save(course);
-		System.out.println("Curso criado com sucesso!");
+		try {
+			System.out.print("Insira o título do curso: ");
+			String title = scanner.nextLine();
+			System.out.print("Insira uma descrição: ");
+			String description = scanner.nextLine();
+			System.out.print("Insira a duração do curso (em horas): ");
+			String hours = scanner.nextLine();
+			int durationHours = Integer.parseInt(hours);
+			if (title == null || title.isBlank() || description == null || description.isBlank() || durationHours <= 0) {
+				System.err.println("Todos os campos devem estar preenchidos corretamente. Tente novamente.");
+			}else if (courseRepository.findByTitle(title).isPresent()) {
+				System.err.println("Já existe um curso registrado com este título. Tente novamente.");
+			}else {
+				Course course = new Course(title, description, durationHours);
+				courseRepository.save(course);
+				System.out.println("Curso criado com sucesso!");
+			}
+		}catch (NumberFormatException e){
+			System.err.println("Erro: Duração do curso deve ser um número inteiro positivo. Tente novamente.");
+		} catch (Exception e) {
+			System.err.println("Erro ao registrar curso: " + e.getMessage() + ". Tente novamente.");
+		}
 	}
 
 	private static void listCourses() {
