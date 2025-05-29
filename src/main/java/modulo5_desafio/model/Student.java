@@ -20,6 +20,13 @@ public class Student {
     @Column(name = "birth_date", nullable = false)
     private LocalDate birthDate;
 
+    public Student() {}
+    public Student(String name, String email, LocalDate birthDate) {
+        this.name = name;
+        this.email = email;
+        this.birthDate = birthDate;
+    }
+
     public Long getId() {
         return id;
     }
