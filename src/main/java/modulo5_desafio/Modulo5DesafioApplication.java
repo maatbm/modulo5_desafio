@@ -71,7 +71,7 @@ public class Modulo5DesafioApplication {
 			String name = scanner.nextLine();
 			System.out.print("Insira o email: ");
 			String email = scanner.nextLine();
-			System.out.print("Insira a data de nascumento (YYYY-MM-DD): ");
+			System.out.print("Insira a data de nascimento (YYYY-MM-DD): ");
 			LocalDate birthDate = LocalDate.parse(scanner.nextLine());
 			if(name == null || name.isBlank() || email == null || email.isBlank()) {
 				System.err.println("Todos os campos devem estar preenchidos. Tente novamente.");
