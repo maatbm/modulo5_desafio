@@ -11,6 +11,7 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.ApplicationContext;
 import java.time.LocalDate;
 import java.time.Period;
+import java.util.InputMismatchException;
 import java.util.List;
 import java.util.Scanner;
 
@@ -65,19 +66,35 @@ public class Modulo5DesafioApplication {
 	}
 
 	private static void registerStudent() {
-		System.out.print("Insira o nome: ");
-		String name = scanner.nextLine();
-		System.out.print("Insira o email: ");
-		String email = scanner.nextLine();
-		System.out.print("Insira a data de nascumento (YYYY-MM-DD): ");
-		LocalDate birthDate = LocalDate.parse(scanner.nextLine());
-
-		Student student = new Student();
-		student.setName(name);
-		student.setEmail(email);
-		student.setBirthDate(birthDate);
-		studentRepository.save(student);
-		System.out.println("Aluno registrado com sucesso!");
+		try {
+			System.out.print("Insira o nome: ");
+			String name = scanner.nextLine();
+			System.out.print("Insira o email: ");
+			String email = scanner.nextLine();
+			System.out.print("Insira a data de nascumento (YYYY-MM-DD): ");
+			LocalDate birthDate = LocalDate.parse(scanner.nextLine());
+			if(name == null || name.isBlank() || email == null || email.isBlank()) {
+				System.err.println("Todos os campos devem estar preenchidos. Tente novamente.");
+				return;
+			} else if (birthDate.isAfter(LocalDate.now())) {
+				System.err.println("Data de nascimento não pode ser no futuro. Tente novamente.");
+				return;
+			}else if (!email.contains("@")) {
+				System.err.println("Email inválido. Tente novamente.");
+				return;
+			} else if (studentRepository.findByEmail(email).isPresent()) {
+				System.err.println("Já existe um aluno registrado com este email. Tente novamente.");
+				return;
+			}
+			Student student = new Student();
+			student.setName(name);
+			student.setEmail(email);
+			student.setBirthDate(birthDate);
+			studentRepository.save(student);
+			System.out.println("Aluno registrado com sucesso!");
+		}catch (Exception e) {
+			System.err.println("Erro ao registrar aluno: " + e.getMessage() + ". Tente novamente.");
+		}
 	}
 
 	private static void listStudents() {
