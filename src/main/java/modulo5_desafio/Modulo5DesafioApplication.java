@@ -112,13 +112,28 @@ public class Modulo5DesafioApplication {
 	}
 
 	private static void findStudentByEmail() {
-		System.out.print("Insira o email do aluno: ");
-		String email = scanner.nextLine();
-		studentRepository.findByEmail(email)
-				.ifPresentOrElse(
-						s -> System.out.println("ID: " + s.getId() + ", Nome: " + s.getName() + ", Email: " + s.getEmail() + ", Data de nascimento: " + s.getBirthDate()),
-						() -> System.out.println("Nenhum aluno encontrado com o email: " + email)
-				);
+		try{
+			System.out.println("\n=== Buscar Aluno por Email ===");
+			System.out.print("Insira o email do aluno: ");
+			String email = scanner.nextLine();
+			if (email == null || email.isBlank()) {
+				System.err.println("O email não pode estar vazio. Tente novamente.");
+			} else if (!email.contains("@")) {
+				System.err.println("Email inválido. Tente novamente.");
+			}else {
+				Student student = studentRepository.findByEmail(email).orElse(null);
+				if (student != null) {
+					System.out.println("ID: " + student.getId());
+					System.out.println("Nome: " + student.getName());
+					System.out.println("Email: " + student.getEmail());
+					System.out.println("Data de nascimento(ANO-MÊS-DIA): " + student.getBirthDate());
+				} else {
+					System.out.println("Nenhum aluno encontrado com o email: " + email);
+				}
+			}
+		} catch (Exception e) {
+			System.err.println("Erro ao buscar aluno por email: " + e.getMessage());
+		}
 	}
 
 	private static void registerCourse() {
