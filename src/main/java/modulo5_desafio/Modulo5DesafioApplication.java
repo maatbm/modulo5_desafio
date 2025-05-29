@@ -128,7 +128,7 @@ public class Modulo5DesafioApplication {
 					System.out.println("Email: " + student.getEmail());
 					System.out.println("Data de nascimento(ANO-MÊS-DIA): " + student.getBirthDate());
 				} else {
-					System.out.println("Nenhum aluno encontrado com o email: " + email);
+					System.err.println("Nenhum aluno encontrado com o email: " + email);
 				}
 			}
 		} catch (Exception e) {
