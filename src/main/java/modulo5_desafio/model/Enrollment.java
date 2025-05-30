@@ -19,7 +19,7 @@ public class Enrollment {
     @JoinColumn(name = "course_id", nullable = false)
     private Course course;
 
-    @Column(name = "enrollment_date")
+    @Column(name = "enrollment_date", insertable = false, updatable = false)
     private LocalDate enrollmentDate;
 
     public Enrollment(){}
