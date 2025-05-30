@@ -243,7 +243,6 @@ public class Modulo5DesafioApplication {
                         enrollmentRepository.save(enrollment);
                         System.out.println("Matrícula registrada com sucesso!");
                     }
-                    Thread.sleep(200); // Atraso forçado, pois sem isso há conflito das mensagens de erro com a interface principal
                 }
             }
         } catch (NumberFormatException e) {
