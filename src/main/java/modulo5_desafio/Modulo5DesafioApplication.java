@@ -1,5 +1,6 @@
 package modulo5_desafio;
 
+import io.github.cdimascio.dotenv.Dotenv;
 import modulo5_desafio.model.Course;
 import modulo5_desafio.model.Enrollment;
 import modulo5_desafio.model.Student;
@@ -22,6 +23,8 @@ public class Modulo5DesafioApplication {
     private static final Scanner scanner = new Scanner(System.in);
 
     public static void main(String[] args) {
+        Dotenv dotenv = Dotenv.load();
+        dotenv.entries().forEach(entry -> System.setProperty(entry.getKey(), entry.getValue()));
         ApplicationContext context = SpringApplication.run(Modulo5DesafioApplication.class, args);
         studentRepository = context.getBean(StudentRepository.class);
         courseRepository = context.getBean(CourseRepository.class);
