@@ -54,11 +54,7 @@ public class Modulo5DesafioApplication {
                 case 7 -> registerEnrollment();
                 case 8 -> listEnrollments();
                 case 9 -> generateEngagementReport();
-                case 0 -> {
-                    System.out.println("Saindo...");
-                    scanner.close();
-                    System.exit(0);
-                }
+                case 0 -> exitApplication();
                 default -> System.out.println("Opção inválida! Tente novamente.");
             }
         }
@@ -290,5 +286,11 @@ public class Modulo5DesafioApplication {
         } catch (Exception e) {
             System.err.println("Erro ao gerar relatório de engajamento: " + e.getMessage());
         }
+    }
+
+    private static void exitApplication() {
+        System.out.println("Saindo do sistema...");
+        scanner.close();
+        System.exit(0);
     }
 }
