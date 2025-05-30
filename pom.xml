@@ -53,6 +53,11 @@
 			<artifactId>dotenv-java</artifactId>
 			<version>3.2.0</version>
 		</dependency>
+		<dependency>
+			<groupId>org.flywaydb</groupId>
+			<artifactId>flyway-parent</artifactId>
+			<version>11.8.2</version>
+		</dependency>
 	</dependencies>
 
 	<build>
