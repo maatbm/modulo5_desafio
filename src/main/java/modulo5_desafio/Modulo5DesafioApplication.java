@@ -281,7 +281,7 @@ public class Modulo5DesafioApplication {
                     Long courseId = (Long) row[0];
                     String courseTitle = (String) row[1];
                     Long totalEnrollments = (Long) row[2];
-                    double averageAge = ((Number) row[3]).doubleValue();
+                    double averageAge = row[3] != null ? ((Number) row[3]).doubleValue() : 0.0;
                     Long recentEnrollments = (Long) row[4];
                     System.out.println("Curso ID: " + courseId);
                     System.out.println("Título do Curso: " + courseTitle);
