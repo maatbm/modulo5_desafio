@@ -19,14 +19,13 @@ public class Enrollment {
     @JoinColumn(name = "course_id", nullable = false)
     private Course course;
 
-    @Column(name = "enrollment_date", nullable = false)
+    @Column(name = "enrollment_date")
     private LocalDate enrollmentDate;
 
     public Enrollment(){}
-    public Enrollment(Student student, Course course, LocalDate enrollmentDate) {
+    public Enrollment(Student student, Course course) {
         this.student = student;
         this.course = course;
-        this.enrollmentDate = enrollmentDate;
     }
 
     public Long getId() {
@@ -51,9 +50,5 @@ public class Enrollment {
 
     public LocalDate getEnrollmentDate() {
         return enrollmentDate;
-    }
-
-    public void setEnrollmentDate(LocalDate enrollmentDate) {
-        this.enrollmentDate = enrollmentDate;
     }
 }
