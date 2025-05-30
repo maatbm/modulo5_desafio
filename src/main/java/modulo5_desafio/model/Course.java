@@ -15,14 +15,11 @@ public class Course {
     @Column(nullable = false, unique = true)
     private String title;
 
-    @Column(nullable = false, length = 650)
+    @Column(nullable = false)
     private String description;
 
     @Column(name = "duration_hours", nullable = false)
     private Integer durationHours;
-
-    @OneToMany(mappedBy = "course", cascade = CascadeType.ALL)
-    private List<Enrollment> enrollments = new ArrayList<>();
 
     public Course() {}
     public Course(String title, String description, Integer durationHours) {
@@ -57,9 +54,5 @@ public class Course {
 
     public void setDurationHours(Integer durationHours) {
         this.durationHours = durationHours;
-    }
-
-    public List<Enrollment> getEnrollments() {
-        return enrollments;
     }
 }
