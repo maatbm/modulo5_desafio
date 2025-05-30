@@ -1,4 +1,6 @@
 // Nomes das variáveis de ambiente
+// Arquivo .env deve ser colocado na raiz do projeto
+
 DB_URL="jdbc:postgresql://localhost:5432/nome_do_banco"
 DB_USER="usuario"
 DB_PASSWORD="senha"
