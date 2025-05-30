@@ -27,37 +27,42 @@ public class Modulo5DesafioApplication {
         courseRepository = context.getBean(CourseRepository.class);
         enrollmentRepository = context.getBean(EnrollmentRepository.class);
 
-        while (true) {
-            System.out.println("\n=== Bem-vindo! ===");
-            System.out.println("1. Registrar novo aluno");
-            System.out.println("2. Listar alunos");
-            System.out.println("3. Buscar aluno por e-mail");
-            System.out.println("4. Registrar novo curso");
-            System.out.println("5. Listar cursos");
-            System.out.println("6. Buscar curso por nome");
-            System.out.println("7. Registrar matrícula");
-            System.out.println("8. Listar matrículas");
-            System.out.println("9. Gerar relatório");
-            System.out.println("0. Sair");
-            System.out.print("Escolha uma opção: ");
+        int option = -1; // Inicializa a opção com um valor inválido para entrar no loop do menu
+        do {
+            try {
+                System.out.println("\n=== Bem-vindo! ===");
+                System.out.println("1. Registrar novo aluno");
+                System.out.println("2. Listar alunos");
+                System.out.println("3. Buscar aluno por e-mail");
+                System.out.println("4. Registrar novo curso");
+                System.out.println("5. Listar cursos");
+                System.out.println("6. Buscar curso por nome");
+                System.out.println("7. Registrar matrícula");
+                System.out.println("8. Listar matrículas");
+                System.out.println("9. Gerar relatório");
+                System.out.println("0. Sair");
+                System.out.print("Escolha uma opção: ");
+                option = scanner.nextInt();
+                scanner.nextLine();
 
-            int option = scanner.nextInt();
-            scanner.nextLine();
-
-            switch (option) {
-                case 1 -> registerStudent();
-                case 2 -> listStudents();
-                case 3 -> findStudentByEmail();
-                case 4 -> registerCourse();
-                case 5 -> listCourses();
-                case 6 -> findCourseByTitle();
-                case 7 -> registerEnrollment();
-                case 8 -> listEnrollments();
-                case 9 -> generateEngagementReport();
-                case 0 -> exitApplication();
-                default -> System.out.println("Opção inválida! Tente novamente.");
+                switch (option) {
+                    case 1 -> registerStudent();
+                    case 2 -> listStudents();
+                    case 3 -> findStudentByEmail();
+                    case 4 -> registerCourse();
+                    case 5 -> listCourses();
+                    case 6 -> findCourseByTitle();
+                    case 7 -> registerEnrollment();
+                    case 8 -> listEnrollments();
+                    case 9 -> generateEngagementReport();
+                    case 0 -> System.out.println("Saindo do sistema. Até logo!");
+                    default -> System.err.println("Opção inválida! Tente novamente.");
+                }
+            } catch (Exception e) {
+                System.err.println("Ocorreu um erro inesperado: " + e.getMessage() + ". Tente novamente.");
+                scanner.nextLine();
             }
-        }
+        }while (option != 0);
     }
 
     private static void registerStudent() {
@@ -286,11 +291,5 @@ public class Modulo5DesafioApplication {
         } catch (Exception e) {
             System.err.println("Erro ao gerar relatório de engajamento: " + e.getMessage());
         }
-    }
-
-    private static void exitApplication() {
-        System.out.println("Saindo do sistema...");
-        scanner.close();
-        System.exit(0);
     }
 }
