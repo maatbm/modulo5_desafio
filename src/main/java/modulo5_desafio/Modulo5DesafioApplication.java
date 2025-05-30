@@ -239,7 +239,7 @@ public class Modulo5DesafioApplication {
                     } else if (enrollmentRepository.findByStudentIdAndCourseId(studentIdLong, courseIdLong).isPresent()) {
                         System.err.println("Este aluno já está matriculado neste curso.");
                     } else {
-                        Enrollment enrollment = new Enrollment(student, course, LocalDate.now());
+                        Enrollment enrollment = new Enrollment(student, course);
                         enrollmentRepository.save(enrollment);
                         System.out.println("Matrícula registrada com sucesso!");
                     }
