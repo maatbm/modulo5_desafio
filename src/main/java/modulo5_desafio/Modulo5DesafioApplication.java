@@ -58,7 +58,10 @@ public class Modulo5DesafioApplication {
                     case 7 -> registerEnrollment();
                     case 8 -> listEnrollments();
                     case 9 -> generateEngagementReport();
-                    case 0 -> System.out.println("Saindo do sistema. Até logo!");
+                    case 0 -> {
+                        System.out.println("Saindo do sistema. Até logo!");
+                        scanner.close();
+                    }
                     default -> System.err.println("Opção inválida! Tente novamente.");
                 }
             } catch (Exception e) {
