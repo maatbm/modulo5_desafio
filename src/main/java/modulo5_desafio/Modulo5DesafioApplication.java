@@ -99,9 +99,9 @@ public class Modulo5DesafioApplication {
     }
 
     private static void listStudents() {
-        System.out.println("\n=== Lista de Alunos ===");
+        System.out.println("\n=== Lista de Alunos Ativos ===");
         try {
-            List<Student> students = studentRepository.findAll();
+            List<Student> students = studentRepository.findActiveStudents();
             if (students.isEmpty()) {
                 System.err.println("Nenhum aluno registrado.");
             } else {
