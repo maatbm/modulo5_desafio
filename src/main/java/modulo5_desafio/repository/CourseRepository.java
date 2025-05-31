@@ -19,22 +19,19 @@ public interface CourseRepository extends JpaRepository<Course, Long> {
     @Modifying
     @Transactional
     @NativeQuery(value = "UPDATE courses SET deleted = true WHERE id = ?1 AND deleted = false")
-    boolean softDeleteCourse(Long id);
+    int softDeleteCourse(Long id);
 
     @Modifying
     @Transactional
     @NativeQuery(value = "UPDATE courses SET deleted = false WHERE id = ?1 AND deleted = true")
-    boolean restoreCourse(Long id);
+    int restoreCourse(Long id);
 
     @Modifying
     @Transactional
     @NativeQuery(value = "UPDATE courses SET title = ?2, description = ?3, duration_hours = ?4 WHERE id = ?1")
-    boolean updateCourse(Long id, String title, String description, int durationHours);
+    int updateCourse(Long id, String title, String description, int durationHours);
 
     List<Course> findByTitleContainingIgnoreCase(String title);
 
     Optional<Course> findByTitle(String title);
-
-    @NativeQuery(value = "SELECT c.id AS course_id, c.title AS course_title, COUNT(e.id) AS total_enrollments, AVG(EXTRACT(YEAR FROM AGE(CURRENT_DATE, s.birth_date))) AS average_year, SUM(CASE WHEN e.enrollment_date >= CURRENT_DATE - INTERVAL '30 days' THEN 1 ELSE 0 END) AS recent_enrollments FROM courses c LEFT JOIN enrollments e ON e.course_id = c.id LEFT JOIN students s ON s.id = e.student_id GROUP BY c.id, c.title")
-    List<Object[]> engagementReport();
 }

@@ -36,8 +36,8 @@ public class CourseService {
     public String deleCourse(String id){
         try{
             Long courseId = Long.parseLong(id);
-            boolean deleted = courseRepository.softDeleteCourse(courseId);
-            if (deleted) {
+            int deleted = courseRepository.softDeleteCourse(courseId);
+            if (deleted == 1) {
                 return ("Curso deletado com sucesso!");
             } else {
                 return ("Curso não encontrado ou já deletado.");
@@ -52,8 +52,8 @@ public class CourseService {
     public String restoreCourse(String id){
         try{
             Long courseId = Long.parseLong(id);
-            boolean restored = courseRepository.restoreCourse(courseId);
-            if (restored) {
+            int restored = courseRepository.restoreCourse(courseId);
+            if (restored == 1) {
                 return ("Curso restaurado com sucesso!");
             } else {
                 return ("Curso não encontrado ou já ativo.");
@@ -72,8 +72,8 @@ public class CourseService {
             if (title == null || title.isBlank() || description == null || description.isBlank() || durationHours <= 0) {
                 return ("Todos os campos devem estar preenchidos corretamente. Tente novamente.");
             } else {
-                boolean updated = courseRepository.updateCourse(courseId, title, description, durationHours);
-                if (updated) {
+                int updated = courseRepository.updateCourse(courseId, title, description, durationHours);
+                if (updated == 1) {
                     return ("Curso atualizado com sucesso!");
                 } else {
                     return ("Curso não encontrado ou não foi possível atualizar.");

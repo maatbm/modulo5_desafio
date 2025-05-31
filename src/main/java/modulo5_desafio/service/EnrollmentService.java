@@ -7,6 +7,7 @@ import modulo5_desafio.repository.EnrollmentRepository;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
+import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -48,15 +49,73 @@ public class EnrollmentService {
 
     public String deleteEnrollment(String enrollmentId) {
         try {
-            Long id = Long.parseLong(enrollmentId);
+            long id = Long.parseLong(enrollmentId);
             if (id <= 0) {
                 return "ID deve ser um número inteiro e positivo";
             } else {
+                int result = enrollmentRepository.deleteEnrollmentById(id);
+                if (result == 1) {
+                    return "Matrícula excluída com sucesso";
+                } else {
+                    return "Matrícula não encontrada ou já excluída";
+                }
             }
         } catch (NumberFormatException e) {
             return "ID deve ser um número inteiro e positivo";
         } catch (Exception e) {
             return "Erro ao excluir matrícula: " + e.getMessage();
+        }
+    }
+
+    public String restoreEnrollment(String enrollmentId) {
+        try {
+            long id = Long.parseLong(enrollmentId);
+            if (id <= 0) {
+                return "ID deve ser um número inteiro e positivo";
+            } else {
+                int result = enrollmentRepository.restoreEnrollmentById(id);
+                if (result == 1) {
+                    return "Matrícula restaurada com sucesso";
+                } else {
+                    return "Matrícula não encontrada ou já ativa";
+                }
+            }
+        } catch (NumberFormatException e) {
+            return "ID deve ser um número inteiro e positivo";
+        } catch (Exception e) {
+            return "Erro ao restaurar matrícula: " + e.getMessage();
+        }
+    }
+
+    public List<Enrollment> getActiveEnrollments() {
+        try{
+            return enrollmentRepository.findActiveEnrollments();
+        }catch (Exception e){
+            return List.of();
+        }
+    }
+
+    public List<Enrollment> getDeletedEnrollments() {
+        try{
+            return enrollmentRepository.findDeletedEnrollments();
+        }catch (Exception e){
+            return List.of();
+        }
+    }
+
+    public List<Enrollment> getAllEnrollments() {
+        try {
+            return enrollmentRepository.findAll();
+        } catch (Exception e) {
+            return List.of();
+        }
+    }
+
+    public List<Object[]> generateEngagementReport() {
+        try {
+            return enrollmentRepository.engagementReport();
+        } catch (Exception e) {
+            return List.of();
         }
     }
 }

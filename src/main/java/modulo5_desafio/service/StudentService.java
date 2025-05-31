@@ -81,8 +81,8 @@ public class StudentService {
     public String deleteStudent(String id) {
         try {
             Long studentId = Long.parseLong(id);
-            boolean deleted = studentRepository.softDeleteStudentById(studentId);
-            if(deleted) {
+            int deleted = studentRepository.softDeleteStudentById(studentId);
+            if(deleted == 1) {
                 return "Aluno deletado com sucesso!";
             } else {
                 return "Aluno não encontrado ou já deletado.";
@@ -97,8 +97,8 @@ public class StudentService {
     public String restoreStudent(String id) {
         try {
             Long studentId = Long.parseLong(id);
-            boolean restored = studentRepository.restoreStudentById(studentId);
-            if(restored) {
+            int restored = studentRepository.restoreStudentById(studentId);
+            if(restored == 1) {
                 return "Aluno restaurado com sucesso!";
             } else {
                 return "Aluno não encontrado ou já ativo.";
@@ -121,8 +121,8 @@ public class StudentService {
             } else if (!email.contains("@")) {
                 return ("Email inválido. Tente novamente.");
             }else {
-                boolean updated = studentRepository.updateStudentById(studentId, name, email, birthDate);
-                if(updated) {
+                int updated = studentRepository.updateStudentById(studentId, name, email, birthDate);
+                if(updated == 1) {
                     return ("Aluno atualizado com sucesso!");
                 }else {
                     return ("Ocorreu um erro ao atualizar o aluno. Verifique se o ID está correto.");
