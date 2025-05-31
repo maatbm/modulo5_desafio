@@ -121,7 +121,7 @@ public class StudentService {
             } else if (!email.contains("@")) {
                 return ("Email inválido. Tente novamente.");
             }else {
-                int updated = studentRepository.updateStudentById(studentId, name, email, birthDate);
+                int updated = studentRepository.updateStudentById(studentId, name, email, date);
                 if(updated == 1) {
                     return ("Aluno atualizado com sucesso!");
                 }else {
