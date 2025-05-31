@@ -62,21 +62,25 @@ public class StudentService {
         }
     }
 
-    public String deleteStudent(Long id) {
+    public String deleteStudent(String id) {
         try {
-            boolean deleted = studentRepository.softDeleteById(id);
+            Long studentId = Long.parseLong(id);
+            boolean deleted = studentRepository.softDeleteById(studentId);
             if(deleted) {
                 return "Aluno deletado com sucesso!";
             } else {
                 return "Aluno não encontrado ou já deletado.";
             }
-        } catch (Exception e) {
+        }catch (NumberFormatException e){
+            return "ID inválido. Por favor, insira um número válido.";
+        }catch (Exception e) {
             return "Erro ao deletar aluno: " + e.getMessage();
         }
     }
 
-    public String updateStudent(Long id, String name, String email, String birthDate) {
+    public String updateStudent(String id, String name, String email, String birthDate) {
         try {
+            Long studentId = Long.parseLong(id);
             LocalDate date = LocalDate.parse(birthDate);
             if (name == null || name.isBlank() || email == null || email.isBlank()) {
                 return ("Todos os campos devem estar preenchidos. Tente novamente.");
@@ -87,7 +91,7 @@ public class StudentService {
             } else if (studentRepository.findByEmail(email).isPresent()) {
                 return ("Já existe um aluno registrado com este email. Tente novamente.");
             } else {
-                boolean updated = studentRepository.updateStudentById(id, name, email, birthDate);
+                boolean updated = studentRepository.updateStudentById(studentId, name, email, birthDate);
                 if(updated) {
                     return ("Aluno atualizado com sucesso!");
                 }else {
@@ -95,7 +99,7 @@ public class StudentService {
                 }
             }
         } catch (NumberFormatException e) {
-            return ("Formato de data invválido. Use o formato AAAA-MM-DD.");
+            return ("Formato de data ou ID invválido. Use o formato AAAA-MM-DD para data e inteiros positivos para ID.");
         } catch (Exception e) {
             return ("Ocorreu um erro ao atualizar o aluno: " + e.getMessage());
         }
