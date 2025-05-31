@@ -112,7 +112,7 @@ public class CourseService {
         }
     }
 
-    public List<Course> searchCoursesByTitle(String title) {
+    public List<Course> getCourseByTitle(String title) {
         try {
             return courseRepository.findByTitleContainingIgnoreCase(title);
         } catch (Exception e) {
