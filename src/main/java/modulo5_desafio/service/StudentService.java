@@ -105,9 +105,7 @@ public class StudentService {
                 return ("Data de nascimento não pode ser no futuro. Tente novamente.");
             } else if (!email.contains("@")) {
                 return ("Email inválido. Tente novamente.");
-            } else if (studentRepository.findByEmail(email).isPresent()) {
-                return ("Já existe um aluno registrado com este email. Tente novamente.");
-            } else {
+            }else {
                 boolean updated = studentRepository.updateStudentById(studentId, name, email, birthDate);
                 if(updated) {
                     return ("Aluno atualizado com sucesso!");
@@ -115,9 +113,11 @@ public class StudentService {
                     return ("Ocorreu um erro ao atualizar o aluno. Verifique se o ID está correto.");
                 }
             }
-        } catch (NumberFormatException e) {
+        }catch (NumberFormatException e) {
             return ("Formato de data ou ID invválido. Use o formato AAAA-MM-DD para data e inteiros positivos para ID.");
-        } catch (Exception e) {
+        }catch (DataIntegrityViolationException e) {
+            return ("Já existe um aluno registrado com este email. Tente novamente.");
+        }catch (Exception e) {
             return ("Ocorreu um erro ao atualizar o aluno: " + e.getMessage());
         }
     }
