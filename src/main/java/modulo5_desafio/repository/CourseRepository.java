@@ -7,7 +7,6 @@ import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.NativeQuery;
 
 import java.util.List;
-import java.util.Optional;
 
 public interface CourseRepository extends JpaRepository<Course, Long> {
     @NativeQuery(value = "SELECT c.id, c.title, c.description, c.duration_hours FROM courses c WHERE deleted = false")
@@ -32,6 +31,4 @@ public interface CourseRepository extends JpaRepository<Course, Long> {
     int updateCourse(Long id, String title, String description, int durationHours);
 
     List<Course> findByTitleContainingIgnoreCase(String title);
-
-    Optional<Course> findByTitle(String title);
 }
