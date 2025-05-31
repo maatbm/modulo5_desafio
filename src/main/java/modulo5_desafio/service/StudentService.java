@@ -15,7 +15,7 @@ public class StudentService {
         this.studentRepository = studentRepository;
     }
 
-    public String InsertStudent(String name, String email, String birthDate){
+    public String insertStudent(String name, String email, String birthDate){
         try{
             LocalDate date = LocalDate.parse(birthDate);
             if (name == null || name.isBlank() || email == null || email.isBlank()) {
@@ -46,9 +46,9 @@ public class StudentService {
         }
     }
 
-    public List<Student> getInactiveStudents(){
+    public List<Student> getDeletedStudents(){
         try {
-            return studentRepository.findInactiveStudents();
+            return studentRepository.findDeletedStudents();
         } catch (Exception e) {
             return List.of();
         }
@@ -65,7 +65,7 @@ public class StudentService {
     public String deleteStudent(String id) {
         try {
             Long studentId = Long.parseLong(id);
-            boolean deleted = studentRepository.softDeleteById(studentId);
+            boolean deleted = studentRepository.softDeleteStudentById(studentId);
             if(deleted) {
                 return "Aluno deletado com sucesso!";
             } else {
