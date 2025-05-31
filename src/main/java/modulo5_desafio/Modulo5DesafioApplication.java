@@ -8,8 +8,10 @@ import modulo5_desafio.repository.CourseRepository;
 import modulo5_desafio.repository.EnrollmentRepository;
 import modulo5_desafio.repository.StudentRepository;
 import modulo5_desafio.service.StudentService;
+
 import static modulo5_desafio.util.Utils.printSuccess;
 import static modulo5_desafio.util.Utils.printError;
+
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.ApplicationContext;
@@ -74,14 +76,14 @@ public class Modulo5DesafioApplication {
         System.out.print("Insira a data de nascimento (ANO-MÊS-DIA): ");
         String birthDate = scanner.nextLine();
         String result = studentService.InsertStudent(name, email, birthDate);
-        if(result.contains("sucesso")) {
+        if (result.contains("sucesso")) {
             printSuccess(result);
         } else {
             printError(result);
         }
     }
 
-    protected static void listStudents() {
+    protected static void listActiveStudents() {
         System.out.println("\n=== Lista de Alunos Ativos ===");
         List<Student> students = studentService.getActiveStudents();
         if (students.isEmpty()) {
@@ -94,6 +96,50 @@ public class Modulo5DesafioApplication {
                 System.out.println("Data de nascimento(ANO-MÊS-DIA): " + s.getBirthDate());
                 System.out.println("------------------------");
             });
+        }
+    }
+
+    protected static void listInactiveStudents() {
+        System.out.println("\n=== Lista de Alunos Deletados ===");
+        List<Student> students = studentService.getInactiveStudents();
+        if (students.isEmpty()) {
+            printError("Nenhum aluno deletado encontrado.");
+        } else {
+            students.forEach(s -> {
+                System.out.println("ID: " + s.getId());
+                System.out.println("Nome: " + s.getName());
+                System.out.println("Email: " + s.getEmail());
+                System.out.println("Data de nascimento(ANO-MÊS-DIA): " + s.getBirthDate());
+                System.out.println("------------------------");
+            });
+        }
+    }
+
+    protected static void listAllStudents() {
+        System.out.println("\n=== Lista de Todos os Alunos ===");
+        List<Student> students = studentService.getAllStudents();
+        if (students.isEmpty()) {
+            printError("Nenhum aluno encontrado.");
+        } else {
+            students.forEach(s -> {
+                System.out.println("ID: " + s.getId());
+                System.out.println("Nome: " + s.getName());
+                System.out.println("Email: " + s.getEmail());
+                System.out.println("Data de nascimento(ANO-MÊS-DIA): " + s.getBirthDate());
+                System.out.println("------------------------");
+            });
+        }
+    }
+
+    protected static void deleteStudent() {
+        System.out.println("\n=== Deletar Aluno ===");
+        System.out.println("Insira o ID do aluno que deseja deletar:");
+        String studentId = scanner.nextLine();
+        String result = studentService.deleteStudent(studentId);
+        if (result.contains("sucesso")) {
+            printSuccess(result);
+        } else {
+            printError(result);
         }
     }
 
