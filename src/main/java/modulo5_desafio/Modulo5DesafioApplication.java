@@ -143,6 +143,24 @@ public class Modulo5DesafioApplication {
         }
     }
 
+    protected static void updateStudent() {
+        System.out.println("\n=== Atualizar Aluno ===");
+        System.out.print("Insira o ID do aluno: ");
+        String studentId = scanner.nextLine();
+        System.out.print("Insira o novo nome: ");
+        String name = scanner.nextLine();
+        System.out.print("Insira o novo email: ");
+        String email = scanner.nextLine();
+        System.out.print("Insira a nova data de nascimento (ANO-MÊS-DIA): ");
+        String birthDate = scanner.nextLine();
+        String result = studentService.updateStudent(studentId, name, email, birthDate);
+        if (result.contains("sucesso")) {
+            printSuccess(result);
+        } else {
+            printError(result);
+        }
+    }
+
     protected static void findStudentByEmail() {
         System.out.println("\n=== Buscar Aluno por Email ===");
         try {
