@@ -18,12 +18,12 @@ public interface CourseRepository extends JpaRepository<Course, Long> {
 
     @Modifying
     @Transactional
-    @NativeQuery(value = "UPDATE courses SET deleted = true WHERE id = ?1")
+    @NativeQuery(value = "UPDATE courses SET deleted = true WHERE id = ?1 AND deleted = false")
     boolean softDeleteCourse(Long id);
 
     @Modifying
     @Transactional
-    @NativeQuery(value = "UPDATE courses SET deleted = false WHERE id = ?1")
+    @NativeQuery(value = "UPDATE courses SET deleted = false WHERE id = ?1 AND deleted = true")
     boolean restoreCourse(Long id);
 
     @Modifying
