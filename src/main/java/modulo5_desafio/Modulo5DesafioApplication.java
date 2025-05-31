@@ -409,11 +409,11 @@ public class Modulo5DesafioApplication {
             System.err.println("Nenhum dado de engajamento encontrado.");
         } else {
             for (Object[] row : reportData) {
-                Long courseId = (Long) row[0];
+                long courseId = row[0] != null ? ((Number) row[0]).longValue() : 0L;
                 String courseTitle = (String) row[1];
-                Long totalEnrollments = (Long) row[2];
+                long totalEnrollments = row[2] != null ? ((Number) row[2]).longValue() : 0L;
                 double averageAge = row[3] != null ? ((Number) row[3]).doubleValue() : 0.0;
-                Long recentEnrollments = (Long) row[4];
+                long recentEnrollments = row[4] != null ? ((Number) row[4]).longValue() : 0L;
                 System.out.println("Curso ID: " + courseId);
                 System.out.println("Título do Curso: " + courseTitle);
                 System.out.println("Total de Matrículas: " + totalEnrollments);
@@ -424,3 +424,4 @@ public class Modulo5DesafioApplication {
         }
     }
 }
+
