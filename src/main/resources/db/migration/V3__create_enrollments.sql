@@ -5,5 +5,7 @@ CREATE TABLE IF NOT EXISTS enrollments (
     enrollment_date DATE DEFAULT CURRENT_DATE,
 
     FOREIGN KEY (student_id) REFERENCES students(id) ON DELETE CASCADE,
-    FOREIGN KEY (course_id) REFERENCES courses(id) ON DELETE CASCADE
+    FOREIGN KEY (course_id) REFERENCES courses(id) ON DELETE CASCADE,
+
+    deleted BOOLEAN NOT NULL DEFAULT FALSE
 );
