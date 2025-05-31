@@ -8,6 +8,8 @@ import modulo5_desafio.repository.CourseRepository;
 import modulo5_desafio.repository.EnrollmentRepository;
 import modulo5_desafio.repository.StudentRepository;
 import modulo5_desafio.service.StudentService;
+import static modulo5_desafio.util.Utils.printSuccess;
+import static modulo5_desafio.util.Utils.printError;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.ApplicationContext;
@@ -81,7 +83,12 @@ public class Modulo5DesafioApplication {
         String email = scanner.nextLine();
         System.out.print("Insira a data de nascimento (ANO-MÊS-DIA): ");
         String birthDate = scanner.nextLine();
-        System.out.println(studentService.InsertStudent(name, email, birthDate));
+        String result = studentService.InsertStudent(name, email, birthDate);
+        if(result.contains("sucesso")) {
+            printSuccess(result);
+        } else {
+            printError(result);
+        }
     }
 
     private static void listStudents() {
