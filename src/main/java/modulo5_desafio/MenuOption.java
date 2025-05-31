@@ -2,7 +2,7 @@ package modulo5_desafio;
 
 public enum MenuOption {
     REGISTRAR_ALUNO(1, "Registrar novo aluno",Modulo5DesafioApplication::registerStudent),
-    LISTAR_ALUNOS(2, "Listar alunos ativos",Modulo5DesafioApplication::listStudents),
+    LISTAR_ALUNOS(2, "Listar alunos ativos",Modulo5DesafioApplication::listActiveStudents),
     BUSCAR_ALUNO_EMAIL(3,"Buscar aluno por email", Modulo5DesafioApplication::findStudentByEmail),
     REGISTRAR_CURSO(4,"Registrar novo curso", Modulo5DesafioApplication::registerCourse),
     LISTAR_CURSOS(5,"Listar cursos ativos", Modulo5DesafioApplication::listCourses),
