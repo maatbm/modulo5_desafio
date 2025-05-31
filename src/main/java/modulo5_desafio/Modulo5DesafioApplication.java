@@ -338,8 +338,8 @@ public class Modulo5DesafioApplication {
         } else {
             enrollments.forEach(e -> {
                 System.out.println("ID: " + e.getId());
-                System.out.println("Aluno ID: " + e.getStudent().getId());
-                System.out.println("Curso ID: " + e.getCourse().getId());
+                System.out.println("Aluno: " + e.getStudent().getName() + " (ID: " + e.getStudent().getId() + ")");
+                System.out.println("Curso: " + e.getCourse().getTitle() + " (ID: " + e.getCourse().getId() + ")");
                 System.out.println("Data de Matrícula: " + e.getEnrollmentDate());
                 System.out.println("------------------------");
             });
@@ -354,8 +354,8 @@ public class Modulo5DesafioApplication {
         } else {
             enrollments.forEach(e -> {
                 System.out.println("ID: " + e.getId());
-                System.out.println("Aluno ID: " + e.getStudent().getId());
-                System.out.println("Curso ID: " + e.getCourse().getId());
+                System.out.println("Aluno: " + e.getStudent().getName() + " (ID: " + e.getStudent().getId() + ")");
+                System.out.println("Curso: " + e.getCourse().getTitle() + " (ID: " + e.getCourse().getId() + ")");
                 System.out.println("Data de Matrícula: " + e.getEnrollmentDate());
                 System.out.println("------------------------");
             });
@@ -370,8 +370,8 @@ public class Modulo5DesafioApplication {
         } else {
             enrollments.forEach(e -> {
                 System.out.println("ID: " + e.getId());
-                System.out.println("Aluno ID: " + e.getStudent().getId());
-                System.out.println("Curso ID: " + e.getCourse().getId());
+                System.out.println("Aluno: " + e.getStudent().getName() + " (ID: " + e.getStudent().getId() + ")");
+                System.out.println("Curso: " + e.getCourse().getTitle() + " (ID: " + e.getCourse().getId() + ")");
                 System.out.println("Data de Matrícula: " + e.getEnrollmentDate());
                 System.out.println("------------------------");
             });
