@@ -4,10 +4,8 @@ import io.github.cdimascio.dotenv.Dotenv;
 import modulo5_desafio.model.Course;
 import modulo5_desafio.model.Enrollment;
 import modulo5_desafio.model.Student;
-import modulo5_desafio.repository.CourseRepository;
-import modulo5_desafio.repository.EnrollmentRepository;
-import modulo5_desafio.repository.StudentRepository;
 import modulo5_desafio.service.CourseService;
+import modulo5_desafio.service.EnrollmentService;
 import modulo5_desafio.service.StudentService;
 
 import static modulo5_desafio.util.Utils.printSuccess;
@@ -23,22 +21,19 @@ import java.util.Scanner;
 
 @SpringBootApplication
 public class Modulo5DesafioApplication {
-    private static StudentRepository studentRepository;
     private static StudentService studentService;
-    private static CourseRepository courseRepository;
     private static CourseService courseService;
-    private static EnrollmentRepository enrollmentRepository;
+    private static EnrollmentService enrollmentService;
+
     private static final Scanner scanner = new Scanner(System.in);
 
     public static void main(String[] args) {
         Dotenv dotenv = Dotenv.load();
         dotenv.entries().forEach(entry -> System.setProperty(entry.getKey(), entry.getValue()));
         ApplicationContext context = SpringApplication.run(Modulo5DesafioApplication.class, args);
-        studentRepository = context.getBean(StudentRepository.class);
         studentService = context.getBean(StudentService.class);
-        courseRepository = context.getBean(CourseRepository.class);
         courseService = context.getBean(CourseService.class);
-        enrollmentRepository = context.getBean(EnrollmentRepository.class);
+        enrollmentService = context.getBean(EnrollmentService.class);
 
         int receivedOption = -1; // Inicializa a opção com um valor inválido para entrar no loop do menu
         do {
@@ -148,6 +143,18 @@ public class Modulo5DesafioApplication {
         }
     }
 
+    protected static void restoreStudent() {
+        System.out.println("\n=== Restaurar Aluno ===");
+        System.out.print("Insira o ID do aluno que deseja restaurar: ");
+        String studentId = scanner.nextLine();
+        String result = studentService.restoreStudent(studentId);
+        if (result.contains("sucesso")) {
+            printSuccess(result);
+        } else {
+            printError(result);
+        }
+    }
+
     protected static void updateStudent() {
         System.out.println("\n=== Atualizar Aluno ===");
         System.out.print("Insira o ID do aluno: ");
@@ -248,7 +255,7 @@ public class Modulo5DesafioApplication {
         }
     }
 
-    protected void deleteCourse() {
+    protected static void deleteCourse() {
         System.out.println("\n=== Deletar Curso ===");
         System.out.print("Insira o ID do curso que deseja deletar: ");
         String courseId = scanner.nextLine();
@@ -260,7 +267,7 @@ public class Modulo5DesafioApplication {
         }
     }
 
-    protected void restoreCourse() {
+    protected static void restoreCourse() {
         System.out.println("\n=== Restaurar Curso ===");
         System.out.print("Insira o ID do curso que deseja restaurar: ");
         String courseId = scanner.nextLine();
@@ -272,7 +279,7 @@ public class Modulo5DesafioApplication {
         }
     }
 
-    protected void updateCourse() {
+    protected static void updateCourse() {
         System.out.println("\n=== Atualizar Curso ===");
         System.out.print("Insira o ID do curso: ");
         String courseId = scanner.nextLine();
@@ -311,80 +318,109 @@ public class Modulo5DesafioApplication {
     // FUNÇÕES PARA GERENCIAMENTO DE MATRÍCULAS
     protected static void registerEnrollment() {
         System.out.println("\n=== Registrar Matrícula ===");
-        try {
-            System.out.print("Insira o ID do aluno: ");
-            String studentId = scanner.nextLine();
-            System.out.print("Insira o ID do curso: ");
-            String courseId = scanner.nextLine();
-            long studentIdLong = Long.parseLong(studentId);
-            long courseIdLong = Long.parseLong(courseId);
-            if (studentIdLong <= 0 || courseIdLong <= 0) {
-                System.err.println("IDs devem ser números positivos. Tente novamente.");
-            } else {
-                Student student = studentRepository.findById(studentIdLong).orElse(null);
-                Course course = courseRepository.findById(courseIdLong).orElse(null);
-                if (student == null) {
-                    System.err.println("Nenhum aluno encontrado com o ID: " + studentIdLong);
-                } else if (course == null) {
-                    System.err.println("Nenhum curso encontrado com o ID: " + courseIdLong);
-                } else if (enrollmentRepository.findByStudentIdAndCourseId(studentIdLong, courseIdLong).isPresent()) {
-                    System.err.println("Este aluno já está matriculado neste curso.");
-                } else {
-                    Enrollment enrollment = new Enrollment(student, course);
-                    enrollmentRepository.save(enrollment);
-                    System.out.println("Matrícula registrada com sucesso!");
-                }
-            }
-        } catch (NumberFormatException e) {
-            System.err.println("Erro: IDs devem ser números inteiros positivos. Tente novamente.");
-        } catch (Exception e) {
-            System.err.println("Ocorreu um erro inesperado: " + e.getMessage() + ". Tente novamente.");
+        System.out.print("Insira o ID do aluno: ");
+        String studentId = scanner.nextLine();
+        System.out.print("Insira o ID do curso: ");
+        String courseId = scanner.nextLine();
+        String result = enrollmentService.insertEnrollment(studentId, courseId);
+        if (result.contains("sucesso")) {
+            printSuccess(result);
+        } else {
+            printError(result);
         }
     }
 
-    protected static void listEnrollments() {
+    protected static void listActiveEnrollments() {
         System.out.println("\n=== Lista de Matrículas Ativas ===");
-        try {
-            List<Enrollment> enrollments = enrollmentRepository.findActiveEnrollments();
-            if (enrollments.isEmpty()) {
-                System.err.println("Nenhuma matrícula registrada.");
-            } else {
-                enrollments.forEach(e -> {
-                    System.out.println("ID: " + e.getId());
-                    System.out.println("Aluno: " + e.getStudent().getName() + " (ID: " + e.getStudent().getId() + ")");
-                    System.out.println("Curso: " + e.getCourse().getTitle() + " (ID: " + e.getCourse().getId() + ")");
-                    System.out.println("Data de matrícula: " + e.getEnrollmentDate());
-                    System.out.println("------------------------");
-                });
-            }
-        } catch (Exception e) {
-            System.err.println("Erro ao listar matrículas: " + e.getMessage());
+        List<Enrollment> enrollments = enrollmentService.getActiveEnrollments();
+        if (enrollments.isEmpty()) {
+            System.err.println("Nenhuma matrícula ativa encontrada.");
+        } else {
+            enrollments.forEach(e -> {
+                System.out.println("ID: " + e.getId());
+                System.out.println("Aluno ID: " + e.getStudent().getId());
+                System.out.println("Curso ID: " + e.getCourse().getId());
+                System.out.println("Data de Matrícula: " + e.getEnrollmentDate());
+                System.out.println("------------------------");
+            });
+        }
+    }
+
+    protected static void listDeletedEnrollments() {
+        System.out.println("\n=== Lista de Matrículas Deletadas ===");
+        List<Enrollment> enrollments = enrollmentService.getDeletedEnrollments();
+        if (enrollments.isEmpty()) {
+            System.err.println("Nenhuma matrícula deletada encontrada.");
+        } else {
+            enrollments.forEach(e -> {
+                System.out.println("ID: " + e.getId());
+                System.out.println("Aluno ID: " + e.getStudent().getId());
+                System.out.println("Curso ID: " + e.getCourse().getId());
+                System.out.println("Data de Matrícula: " + e.getEnrollmentDate());
+                System.out.println("------------------------");
+            });
+        }
+    }
+
+    protected static void listAllEnrollments() {
+        System.out.println("\n=== Lista de Todas as Matrículas ===");
+        List<Enrollment> enrollments = enrollmentService.getAllEnrollments();
+        if (enrollments.isEmpty()) {
+            System.err.println("Nenhuma matrícula encontrada.");
+        } else {
+            enrollments.forEach(e -> {
+                System.out.println("ID: " + e.getId());
+                System.out.println("Aluno ID: " + e.getStudent().getId());
+                System.out.println("Curso ID: " + e.getCourse().getId());
+                System.out.println("Data de Matrícula: " + e.getEnrollmentDate());
+                System.out.println("------------------------");
+            });
+        }
+    }
+
+    protected static void deleteEnrollment() {
+        System.out.println("\n=== Deletar Matrícula ===");
+        System.out.print("Insira o ID da matrícula que deseja deletar: ");
+        String enrollmentId = scanner.nextLine();
+        String result = enrollmentService.deleteEnrollment(enrollmentId);
+        if (result.contains("sucesso")) {
+            printSuccess(result);
+        } else {
+            printError(result);
+        }
+    }
+
+    protected static void restoreEnrollment() {
+        System.out.println("\n=== Restaurar Matrícula ===");
+        System.out.print("Insira o ID da matrícula que deseja restaurar: ");
+        String enrollmentId = scanner.nextLine();
+        String result = enrollmentService.restoreEnrollment(enrollmentId);
+        if (result.contains("sucesso")) {
+            printSuccess(result);
+        } else {
+            printError(result);
         }
     }
 
     protected static void generateEngagementReport() {
         System.out.println("\n=== Relatório de Engajamento ===");
-        try {
-            List<Object[]> reportData = courseRepository.engagementReport();
-            if (reportData.isEmpty()) {
-                System.err.println("Nenhum dado de engajamento encontrado.");
-            } else {
-                for (Object[] row : reportData) {
-                    Long courseId = (Long) row[0];
-                    String courseTitle = (String) row[1];
-                    Long totalEnrollments = (Long) row[2];
-                    double averageAge = row[3] != null ? ((Number) row[3]).doubleValue() : 0.0;
-                    Long recentEnrollments = (Long) row[4];
-                    System.out.println("Curso ID: " + courseId);
-                    System.out.println("Título do Curso: " + courseTitle);
-                    System.out.println("Total de Matrículas: " + totalEnrollments);
-                    System.out.println("Idade Média dos Alunos: " + averageAge);
-                    System.out.println("Matrículas Recentes (últimos 30 dias): " + recentEnrollments);
-                    System.out.println("------------------------");
-                }
+        List<Object[]> reportData = enrollmentService.generateEngagementReport();
+        if (reportData.isEmpty()) {
+            System.err.println("Nenhum dado de engajamento encontrado.");
+        } else {
+            for (Object[] row : reportData) {
+                Long courseId = (Long) row[0];
+                String courseTitle = (String) row[1];
+                Long totalEnrollments = (Long) row[2];
+                double averageAge = row[3] != null ? ((Number) row[3]).doubleValue() : 0.0;
+                Long recentEnrollments = (Long) row[4];
+                System.out.println("Curso ID: " + courseId);
+                System.out.println("Título do Curso: " + courseTitle);
+                System.out.println("Total de Matrículas: " + totalEnrollments);
+                System.out.println("Idade Média dos Alunos: " + averageAge);
+                System.out.println("Matrículas Recentes (últimos 30 dias): " + recentEnrollments);
+                System.out.println("------------------------");
             }
-        } catch (Exception e) {
-            System.err.println("Erro ao gerar relatório de engajamento: " + e.getMessage());
         }
     }
 }
