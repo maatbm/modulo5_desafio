@@ -5,7 +5,7 @@ public enum MenuOption {
     LISTAR_ALUNOS(2, "Listar alunos ativos",Modulo5DesafioApplication::listActiveStudents),
     BUSCAR_ALUNO_EMAIL(3,"Buscar aluno por email", Modulo5DesafioApplication::findStudentByEmail),
     REGISTRAR_CURSO(4,"Registrar novo curso", Modulo5DesafioApplication::registerCourse),
-    LISTAR_CURSOS(5,"Listar cursos ativos", Modulo5DesafioApplication::listCourses),
+    LISTAR_CURSOS(5,"Listar cursos ativos", Modulo5DesafioApplication::listActiveCourses),
     BUSCAR_CURSO_TITULO(6,"Buscar curso por título", Modulo5DesafioApplication::findCourseByTitle),
     REGISTRAR_MATRICULA(7, "Registrar nova matrícula",Modulo5DesafioApplication::registerEnrollment),
     LISTAR_MATRICULAS(8, "Listar matrículas ativas",Modulo5DesafioApplication::listEnrollments),
