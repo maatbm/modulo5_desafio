@@ -6,6 +6,7 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.NativeQuery;
 
+import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
 
@@ -29,7 +30,7 @@ public interface StudentRepository extends JpaRepository<Student, Long> {
     @Modifying
     @Transactional
     @NativeQuery(value = "UPDATE students SET name = ?2, email = ?3, birth_date = ?4 WHERE id = ?1")
-    int updateStudentById(Long id, String name, String email, String birthDate);
+    int updateStudentById(Long id, String name, String email, LocalDate birthDate);
 
     Optional<Student> findByEmail(String email);
 }
