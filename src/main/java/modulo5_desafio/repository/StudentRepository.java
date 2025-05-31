@@ -23,6 +23,11 @@ public interface StudentRepository extends JpaRepository<Student, Long> {
 
     @Modifying
     @Transactional
+    @NativeQuery(value = "UPDATE students SET deleted = false WHERE id = ?1")
+    boolean restoreStudentById(Long id);
+
+    @Modifying
+    @Transactional
     @NativeQuery(value = "UPDATE students SET name = ?2, email = ?3, birth_date = ?4 WHERE id = ?1")
     boolean updateStudentById(Long id, String name, String email, String birthDate);
 

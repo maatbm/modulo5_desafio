@@ -2,6 +2,7 @@ package modulo5_desafio.service;
 
 import modulo5_desafio.model.Student;
 import modulo5_desafio.repository.StudentRepository;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
@@ -24,8 +25,6 @@ public class StudentService {
                 return ("Data de nascimento não pode ser no futuro. Tente novamente.");
             } else if (!email.contains("@")) {
                 return ("Email inválido. Tente novamente.");
-            } else if (studentRepository.findByEmail(email).isPresent()) {
-                return ("Já existe um aluno registrado com este email. Tente novamente.");
             } else {
                 Student student = new Student(name, email, date);
                 studentRepository.save(student);
@@ -33,7 +32,9 @@ public class StudentService {
             }
         }catch (NumberFormatException e) {
             return ("Formato de data inválido. Use o formato AAAA-MM-DD.");
-        } catch (Exception e) {
+        }catch (DataIntegrityViolationException e) {
+            return ("Já existe um aluno registrado com este email. Tente novamente.");
+        }catch (Exception e) {
             return ("Ocorreu um erro ao registrar o aluno: " + e.getMessage());
         }
     }
@@ -75,6 +76,22 @@ public class StudentService {
             return "ID inválido. Por favor, insira um número válido.";
         }catch (Exception e) {
             return "Erro ao deletar aluno: " + e.getMessage();
+        }
+    }
+
+    public String restoreStudent(String id) {
+        try {
+            Long studentId = Long.parseLong(id);
+            boolean restored = studentRepository.restoreStudentById(studentId);
+            if(restored) {
+                return "Aluno restaurado com sucesso!";
+            } else {
+                return "Aluno não encontrado ou já ativo.";
+            }
+        } catch (NumberFormatException e) {
+            return "ID inválido. Por favor, insira um número válido.";
+        } catch (Exception e) {
+            return "Erro ao restaurar aluno: " + e.getMessage();
         }
     }
 
