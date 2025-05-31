@@ -34,48 +34,38 @@ public class Modulo5DesafioApplication {
         courseRepository = context.getBean(CourseRepository.class);
         enrollmentRepository = context.getBean(EnrollmentRepository.class);
 
-        int option = -1; // Inicializa a opção com um valor inválido para entrar no loop do menu
+        int receivedOption = -1; // Inicializa a opção com um valor inválido para entrar no loop do menu
         do {
             try {
-                System.out.println("\n=== Bem-vindo! ===");
-                System.out.println("1. Registrar novo aluno");
-                System.out.println("2. Listar alunos");
-                System.out.println("3. Buscar aluno por e-mail");
-                System.out.println("4. Registrar novo curso");
-                System.out.println("5. Listar cursos");
-                System.out.println("6. Buscar curso por nome");
-                System.out.println("7. Registrar matrícula");
-                System.out.println("8. Listar matrículas");
-                System.out.println("9. Gerar relatório");
+                System.out.println("\n=== MENU ===");
+                for (MenuOption option : MenuOption.values()) {
+                    System.out.println(option.code + ". " + option.label);
+                }
                 System.out.println("0. Sair");
                 System.out.print("Escolha uma opção: ");
-                option = scanner.nextInt();
+                receivedOption = scanner.nextInt();
                 scanner.nextLine();
 
-                switch (option) {
-                    case 1 -> registerStudent();
-                    case 2 -> listStudents();
-                    case 3 -> findStudentByEmail();
-                    case 4 -> registerCourse();
-                    case 5 -> listCourses();
-                    case 6 -> findCourseByTitle();
-                    case 7 -> registerEnrollment();
-                    case 8 -> listEnrollments();
-                    case 9 -> generateEngagementReport();
-                    case 0 -> {
-                        System.out.println("Saindo do sistema. Até logo!");
-                        scanner.close();
-                    }
-                    default -> System.err.println("Opção inválida! Tente novamente.");
+                if (receivedOption == 0) {
+                    System.out.println("Saindo do sistema. Até logo!");
+                    break;
+                }
+
+                MenuOption menuOption = MenuOption.fromCode(receivedOption);
+                if (menuOption != null) {
+                    menuOption.action.run();
+                } else {
+                    System.err.println("Opção inválida! Tente novamente.");
                 }
             } catch (Exception e) {
                 System.err.println("Ocorreu um erro inesperado: " + e.getMessage() + ". Tente novamente.");
                 scanner.nextLine();
             }
-        } while (option != 0);
+        } while (receivedOption != 0);
+        scanner.close();
     }
 
-    private static void registerStudent() {
+    protected static void registerStudent() {
         System.out.println("\n=== Registrar Aluno ===");
         System.out.print("Insira o nome: ");
         String name = scanner.nextLine();
@@ -91,27 +81,23 @@ public class Modulo5DesafioApplication {
         }
     }
 
-    private static void listStudents() {
+    protected static void listStudents() {
         System.out.println("\n=== Lista de Alunos Ativos ===");
-        try {
-            List<Student> students = studentRepository.findActiveStudents();
-            if (students.isEmpty()) {
-                System.err.println("Nenhum aluno registrado.");
-            } else {
-                students.forEach(s -> {
-                    System.out.println("ID: " + s.getId());
-                    System.out.println("Nome: " + s.getName());
-                    System.out.println("Email: " + s.getEmail());
-                    System.out.println("Data de nascimento(ANO-MÊS-DIA): " + s.getBirthDate());
-                    System.out.println("------------------------");
-                });
-            }
-        } catch (Exception e) {
-            System.err.println("Erro ao listar alunos: " + e.getMessage());
+        List<Student> students = studentService.getActiveStudents();
+        if (students.isEmpty()) {
+            printError("Nenhum aluno ativo encontrado.");
+        } else {
+            students.forEach(s -> {
+                System.out.println("ID: " + s.getId());
+                System.out.println("Nome: " + s.getName());
+                System.out.println("Email: " + s.getEmail());
+                System.out.println("Data de nascimento(ANO-MÊS-DIA): " + s.getBirthDate());
+                System.out.println("------------------------");
+            });
         }
     }
 
-    private static void findStudentByEmail() {
+    protected static void findStudentByEmail() {
         System.out.println("\n=== Buscar Aluno por Email ===");
         try {
             System.out.print("Insira o email do aluno: ");
@@ -136,7 +122,7 @@ public class Modulo5DesafioApplication {
         }
     }
 
-    private static void registerCourse() {
+    protected static void registerCourse() {
         System.out.println("\n=== Registrar Curso ===");
         try {
             System.out.print("Insira o título do curso: ");
@@ -162,7 +148,7 @@ public class Modulo5DesafioApplication {
         }
     }
 
-    private static void listCourses() {
+    protected static void listCourses() {
         System.out.println("\n=== Lista de Cursos Ativos ===");
         try {
             List<Course> courses = courseRepository.findActiveCourses();
@@ -182,7 +168,7 @@ public class Modulo5DesafioApplication {
         }
     }
 
-    private static void findCourseByTitle() {
+    protected static void findCourseByTitle() {
         System.out.println("\n=== Buscar Curso por Título ===");
         try {
             System.out.print("Insira o título do curso (ou parte dele): ");
@@ -208,7 +194,7 @@ public class Modulo5DesafioApplication {
         }
     }
 
-    private static void registerEnrollment() {
+    protected static void registerEnrollment() {
         System.out.println("\n=== Registrar Matrícula ===");
         try {
             System.out.print("Insira o ID do aluno: ");
@@ -241,7 +227,7 @@ public class Modulo5DesafioApplication {
         }
     }
 
-    private static void listEnrollments() {
+    protected static void listEnrollments() {
         System.out.println("\n=== Lista de Matrículas Ativas ===");
         try {
             List<Enrollment> enrollments = enrollmentRepository.findActiveEnrollments();
@@ -261,7 +247,7 @@ public class Modulo5DesafioApplication {
         }
     }
 
-    private static void generateEngagementReport() {
+    protected static void generateEngagementReport() {
         System.out.println("\n=== Relatório de Engajamento ===");
         try {
             List<Object[]> reportData = courseRepository.engagementReport();
