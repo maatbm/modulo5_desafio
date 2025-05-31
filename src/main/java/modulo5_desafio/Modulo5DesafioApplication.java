@@ -68,7 +68,7 @@ public class Modulo5DesafioApplication {
                 System.err.println("Ocorreu um erro inesperado: " + e.getMessage() + ". Tente novamente.");
                 scanner.nextLine();
             }
-        }while (option != 0);
+        } while (option != 0);
     }
 
     private static void registerStudent() {
@@ -218,31 +218,27 @@ public class Modulo5DesafioApplication {
     private static void registerEnrollment() {
         System.out.println("\n=== Registrar Matrícula ===");
         try {
-            if (studentRepository.count() == 0 || courseRepository.count() == 0) {
-                System.err.println("Nenhum aluno ou curso registrado. Por favor, registre um aluno e um curso primeiro.");
+            System.out.print("Insira o ID do aluno: ");
+            String studentId = scanner.nextLine();
+            System.out.print("Insira o ID do curso: ");
+            String courseId = scanner.nextLine();
+            long studentIdLong = Long.parseLong(studentId);
+            long courseIdLong = Long.parseLong(courseId);
+            if (studentIdLong <= 0 || courseIdLong <= 0) {
+                System.err.println("IDs devem ser números positivos. Tente novamente.");
             } else {
-                System.out.print("Insira o ID do aluno: ");
-                String studentId = scanner.nextLine();
-                System.out.print("Insira o ID do curso: ");
-                String courseId = scanner.nextLine();
-                long studentIdLong = Long.parseLong(studentId);
-                long courseIdLong = Long.parseLong(courseId);
-                if (studentIdLong <= 0 || courseIdLong <= 0) {
-                    System.err.println("IDs devem ser números positivos. Tente novamente.");
+                Student student = studentRepository.findById(studentIdLong).orElse(null);
+                Course course = courseRepository.findById(courseIdLong).orElse(null);
+                if (student == null) {
+                    System.err.println("Nenhum aluno encontrado com o ID: " + studentIdLong);
+                } else if (course == null) {
+                    System.err.println("Nenhum curso encontrado com o ID: " + courseIdLong);
+                } else if (enrollmentRepository.findByStudentIdAndCourseId(studentIdLong, courseIdLong).isPresent()) {
+                    System.err.println("Este aluno já está matriculado neste curso.");
                 } else {
-                    Student student = studentRepository.findById(studentIdLong).orElse(null);
-                    Course course = courseRepository.findById(courseIdLong).orElse(null);
-                    if (student == null) {
-                        System.err.println("Nenhum aluno encontrado com o ID: " + studentIdLong);
-                    } else if (course == null) {
-                        System.err.println("Nenhum curso encontrado com o ID: " + courseIdLong);
-                    } else if (enrollmentRepository.findByStudentIdAndCourseId(studentIdLong, courseIdLong).isPresent()) {
-                        System.err.println("Este aluno já está matriculado neste curso.");
-                    } else {
-                        Enrollment enrollment = new Enrollment(student, course);
-                        enrollmentRepository.save(enrollment);
-                        System.out.println("Matrícula registrada com sucesso!");
-                    }
+                    Enrollment enrollment = new Enrollment(student, course);
+                    enrollmentRepository.save(enrollment);
+                    System.out.println("Matrícula registrada com sucesso!");
                 }
             }
         } catch (NumberFormatException e) {
@@ -253,9 +249,9 @@ public class Modulo5DesafioApplication {
     }
 
     private static void listEnrollments() {
-        System.out.println("\n=== Lista de Matrículas ===");
+        System.out.println("\n=== Lista de Matrículas Ativas ===");
         try {
-            List<Enrollment> enrollments = enrollmentRepository.findAll();
+            List<Enrollment> enrollments = enrollmentRepository.findActiveEnrollments();
             if (enrollments.isEmpty()) {
                 System.err.println("Nenhuma matrícula registrada.");
             } else {
@@ -274,7 +270,7 @@ public class Modulo5DesafioApplication {
 
     private static void generateEngagementReport() {
         System.out.println("\n=== Relatório de Engajamento ===");
-        try{
+        try {
             List<Object[]> reportData = courseRepository.engagementReport();
             if (reportData.isEmpty()) {
                 System.err.println("Nenhum dado de engajamento encontrado.");
