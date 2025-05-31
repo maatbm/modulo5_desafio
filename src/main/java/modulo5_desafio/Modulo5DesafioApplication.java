@@ -170,9 +170,9 @@ public class Modulo5DesafioApplication {
     }
 
     private static void listCourses() {
-        System.out.println("\n=== Lista de Cursos ===");
+        System.out.println("\n=== Lista de Cursos Ativos ===");
         try {
-            List<Course> courses = courseRepository.findAll();
+            List<Course> courses = courseRepository.findActiveCourses();
             if (courses.isEmpty()) {
                 System.err.println("Nenhum curso registrado.");
             } else {
