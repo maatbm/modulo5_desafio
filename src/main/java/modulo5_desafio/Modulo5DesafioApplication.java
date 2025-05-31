@@ -171,7 +171,7 @@ public class Modulo5DesafioApplication {
         System.out.print("Insira o email do aluno: ");
         String email = scanner.nextLine();
         Optional<Student> student = studentService.getStudentByEmail(email);
-        if(student.isEmpty()){
+        if (student.isEmpty()) {
             System.err.println("Nenhum aluno encontrado com o email: " + email);
         } else {
             Student s = student.get();
@@ -200,23 +200,93 @@ public class Modulo5DesafioApplication {
         }
     }
 
-    protected static void listCourses() {
+    protected static void listActiveCourses() {
         System.out.println("\n=== Lista de Cursos Ativos ===");
-        try {
-            List<Course> courses = courseRepository.findActiveCourses();
-            if (courses.isEmpty()) {
-                System.err.println("Nenhum curso registrado.");
-            } else {
-                courses.forEach(c -> {
-                    System.out.println("ID: " + c.getId());
-                    System.out.println("Título: " + c.getTitle());
-                    System.out.println("Descrição: " + c.getDescription());
-                    System.out.println("Duração (horas): " + c.getDurationHours());
-                    System.out.println("------------------------");
-                });
-            }
-        } catch (Exception e) {
-            System.err.println("Erro ao listar cursos: " + e.getMessage());
+        List<Course> courses = courseService.getActiveCourses();
+        if (courses.isEmpty()) {
+            System.err.println("Nenhum curso ativo encontrado.");
+        } else {
+            courses.forEach(c -> {
+                System.out.println("ID: " + c.getId());
+                System.out.println("Título: " + c.getTitle());
+                System.out.println("Descrição: " + c.getDescription());
+                System.out.println("Duração (horas): " + c.getDurationHours());
+                System.out.println("------------------------");
+            });
+        }
+    }
+
+    protected static void listDeletedCourses() {
+        System.out.println("\n=== Lista de Cursos Deletados ===");
+        List<Course> courses = courseService.getDeletedCourses();
+        if (courses.isEmpty()) {
+            System.err.println("Nenhum curso deletado encontrado.");
+        } else {
+            courses.forEach(c -> {
+                System.out.println("ID: " + c.getId());
+                System.out.println("Título: " + c.getTitle());
+                System.out.println("Descrição: " + c.getDescription());
+                System.out.println("Duração (horas): " + c.getDurationHours());
+                System.out.println("------------------------");
+            });
+        }
+    }
+
+    protected static void listAllCourses() {
+        System.out.println("\n=== Lista de Todos os Cursos ===");
+        List<Course> courses = courseService.getAllCourses();
+        if (courses.isEmpty()) {
+            System.err.println("Nenhum curso encontrado.");
+        } else {
+            courses.forEach(c -> {
+                System.out.println("ID: " + c.getId());
+                System.out.println("Título: " + c.getTitle());
+                System.out.println("Descrição: " + c.getDescription());
+                System.out.println("Duração (horas): " + c.getDurationHours());
+                System.out.println("------------------------");
+            });
+        }
+    }
+
+    protected void deleteCourse() {
+        System.out.println("\n=== Deletar Curso ===");
+        System.out.print("Insira o ID do curso que deseja deletar: ");
+        String courseId = scanner.nextLine();
+        String result = courseService.deleCourse(courseId);
+        if (result.contains("sucesso")) {
+            printSuccess(result);
+        } else {
+            printError(result);
+        }
+    }
+
+    protected void restoreCourse() {
+        System.out.println("\n=== Restaurar Curso ===");
+        System.out.print("Insira o ID do curso que deseja restaurar: ");
+        String courseId = scanner.nextLine();
+        String result = courseService.restoreCourse(courseId);
+        if (result.contains("sucesso")) {
+            printSuccess(result);
+        } else {
+            printError(result);
+        }
+    }
+
+    protected void updateCourse() {
+        System.out.println("\n=== Atualizar Curso ===");
+        System.out.print("Insira o ID do curso: ");
+        String courseId = scanner.nextLine();
+        System.out.print("Insira o novo título: ");
+        String title = scanner.nextLine();
+        System.out.print("Insira a nova descrição: ");
+        String description = scanner.nextLine();
+        System.out.print("Insira a nova duração (em horas): ");
+        String hours = scanner.nextLine();
+        String result = courseService.updateCourse(courseId, title, description, hours);
+        if (result.contains("sucesso")) {
+            printSuccess(result);
+        } else {
+            printError(result);
         }
     }
 
