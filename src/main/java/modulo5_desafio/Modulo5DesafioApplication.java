@@ -7,17 +7,18 @@ import modulo5_desafio.model.Student;
 import modulo5_desafio.repository.CourseRepository;
 import modulo5_desafio.repository.EnrollmentRepository;
 import modulo5_desafio.repository.StudentRepository;
+import modulo5_desafio.service.StudentService;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.ApplicationContext;
 
-import java.time.LocalDate;
 import java.util.List;
 import java.util.Scanner;
 
 @SpringBootApplication
 public class Modulo5DesafioApplication {
     private static StudentRepository studentRepository;
+    private static StudentService studentService;
     private static CourseRepository courseRepository;
     private static EnrollmentRepository enrollmentRepository;
     private static final Scanner scanner = new Scanner(System.in);
@@ -27,6 +28,7 @@ public class Modulo5DesafioApplication {
         dotenv.entries().forEach(entry -> System.setProperty(entry.getKey(), entry.getValue()));
         ApplicationContext context = SpringApplication.run(Modulo5DesafioApplication.class, args);
         studentRepository = context.getBean(StudentRepository.class);
+        studentService = context.getBean(StudentService.class);
         courseRepository = context.getBean(CourseRepository.class);
         enrollmentRepository = context.getBean(EnrollmentRepository.class);
 
@@ -73,29 +75,13 @@ public class Modulo5DesafioApplication {
 
     private static void registerStudent() {
         System.out.println("\n=== Registrar Aluno ===");
-        try {
-            System.out.print("Insira o nome: ");
-            String name = scanner.nextLine();
-            System.out.print("Insira o email: ");
-            String email = scanner.nextLine();
-            System.out.print("Insira a data de nascimento (ANO-MÊS-DIA): ");
-            LocalDate birthDate = LocalDate.parse(scanner.nextLine());
-            if (name == null || name.isBlank() || email == null || email.isBlank()) {
-                System.err.println("Todos os campos devem estar preenchidos. Tente novamente.");
-            } else if (birthDate.isAfter(LocalDate.now())) {
-                System.err.println("Data de nascimento não pode ser no futuro. Tente novamente.");
-            } else if (!email.contains("@")) {
-                System.err.println("Email inválido. Tente novamente.");
-            } else if (studentRepository.findByEmail(email).isPresent()) {
-                System.err.println("Já existe um aluno registrado com este email. Tente novamente.");
-            } else {
-                Student student = new Student(name, email, birthDate);
-                studentRepository.save(student);
-                System.out.println("Aluno registrado com sucesso!");
-            }
-        } catch (Exception e) {
-            System.err.println("Erro ao registrar aluno: " + e.getMessage() + ". Tente novamente.");
-        }
+        System.out.print("Insira o nome: ");
+        String name = scanner.nextLine();
+        System.out.print("Insira o email: ");
+        String email = scanner.nextLine();
+        System.out.print("Insira a data de nascimento (ANO-MÊS-DIA): ");
+        String birthDate = scanner.nextLine();
+        System.out.println(studentService.InsertStudent(name, email, birthDate));
     }
 
     private static void listStudents() {
