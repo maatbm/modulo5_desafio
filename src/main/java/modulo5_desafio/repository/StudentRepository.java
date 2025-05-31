@@ -14,12 +14,12 @@ public interface StudentRepository extends JpaRepository<Student, Long> {
     List<Student> findActiveStudents();
 
     @NativeQuery(value = "SELECT s.id, s.name, s.email, s.birth_date FROM students s WHERE deleted = true")
-    List<Student> findInactiveStudents();
+    List<Student> findDeletedStudents();
 
     @Modifying
     @Transactional
     @NativeQuery(value = "UPDATE students SET deleted = true WHERE id = ?1")
-    boolean softDeleteById(Long id);
+    boolean softDeleteStudentById(Long id);
 
     @Modifying
     @Transactional
