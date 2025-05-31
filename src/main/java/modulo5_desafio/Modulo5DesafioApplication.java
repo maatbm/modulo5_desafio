@@ -7,6 +7,7 @@ import modulo5_desafio.model.Student;
 import modulo5_desafio.repository.CourseRepository;
 import modulo5_desafio.repository.EnrollmentRepository;
 import modulo5_desafio.repository.StudentRepository;
+import modulo5_desafio.service.CourseService;
 import modulo5_desafio.service.StudentService;
 
 import static modulo5_desafio.util.Utils.printSuccess;
@@ -24,6 +25,7 @@ public class Modulo5DesafioApplication {
     private static StudentRepository studentRepository;
     private static StudentService studentService;
     private static CourseRepository courseRepository;
+    private static CourseService courseService;
     private static EnrollmentRepository enrollmentRepository;
     private static final Scanner scanner = new Scanner(System.in);
 
@@ -34,6 +36,7 @@ public class Modulo5DesafioApplication {
         studentRepository = context.getBean(StudentRepository.class);
         studentService = context.getBean(StudentService.class);
         courseRepository = context.getBean(CourseRepository.class);
+        courseService = context.getBean(CourseService.class);
         enrollmentRepository = context.getBean(EnrollmentRepository.class);
 
         int receivedOption = -1; // Inicializa a opção com um valor inválido para entrar no loop do menu
@@ -67,6 +70,7 @@ public class Modulo5DesafioApplication {
         scanner.close();
     }
 
+    // FUNÇÕES PARA GERENCIAMENTO DE ALUNOS
     protected static void registerStudent() {
         System.out.println("\n=== Registrar Aluno ===");
         System.out.print("Insira o nome: ");
@@ -75,7 +79,7 @@ public class Modulo5DesafioApplication {
         String email = scanner.nextLine();
         System.out.print("Insira a data de nascimento (ANO-MÊS-DIA): ");
         String birthDate = scanner.nextLine();
-        String result = studentService.InsertStudent(name, email, birthDate);
+        String result = studentService.insertStudent(name, email, birthDate);
         if (result.contains("sucesso")) {
             printSuccess(result);
         } else {
@@ -99,9 +103,9 @@ public class Modulo5DesafioApplication {
         }
     }
 
-    protected static void listInactiveStudents() {
+    protected static void listDeletedStudents() {
         System.out.println("\n=== Lista de Alunos Deletados ===");
-        List<Student> students = studentService.getInactiveStudents();
+        List<Student> students = studentService.getDeletedStudents();
         if (students.isEmpty()) {
             printError("Nenhum aluno deletado encontrado.");
         } else {
@@ -186,29 +190,20 @@ public class Modulo5DesafioApplication {
         }
     }
 
+    // FUNÇÕES PARA GERENCIAMENTO DE CURSOS
     protected static void registerCourse() {
         System.out.println("\n=== Registrar Curso ===");
-        try {
-            System.out.print("Insira o título do curso: ");
-            String title = scanner.nextLine();
-            System.out.print("Insira uma descrição: ");
-            String description = scanner.nextLine();
-            System.out.print("Insira a duração do curso (em horas): ");
-            String hours = scanner.nextLine();
-            int durationHours = Integer.parseInt(hours);
-            if (title == null || title.isBlank() || description == null || description.isBlank() || durationHours <= 0) {
-                System.err.println("Todos os campos devem estar preenchidos corretamente. Tente novamente.");
-            } else if (courseRepository.findByTitle(title).isPresent()) {
-                System.err.println("Já existe um curso registrado com este título. Tente novamente.");
-            } else {
-                Course course = new Course(title, description, durationHours);
-                courseRepository.save(course);
-                System.out.println("Curso criado com sucesso!");
-            }
-        } catch (NumberFormatException e) {
-            System.err.println("Erro: Duração do curso deve ser um número inteiro positivo. Tente novamente.");
-        } catch (Exception e) {
-            System.err.println("Erro ao registrar curso: " + e.getMessage() + ". Tente novamente.");
+        System.out.print("Insira o título do curso: ");
+        String title = scanner.nextLine();
+        System.out.print("Insira uma descrição: ");
+        String description = scanner.nextLine();
+        System.out.print("Insira a duração do curso (em horas): ");
+        String hours = scanner.nextLine();
+        String result = courseService.insertCourse(title, description, hours);
+        if (result.contains("sucesso")) {
+            printSuccess(result);
+        } else {
+            printError(result);
         }
     }
 
