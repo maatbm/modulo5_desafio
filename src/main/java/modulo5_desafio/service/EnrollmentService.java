@@ -4,17 +4,22 @@ import modulo5_desafio.model.Course;
 import modulo5_desafio.model.Enrollment;
 import modulo5_desafio.model.Student;
 import modulo5_desafio.repository.EnrollmentRepository;
+import modulo5_desafio.repository.StudentRepository;
+import modulo5_desafio.repository.CourseRepository;
 import org.springframework.stereotype.Service;
 
-import java.time.LocalDate;
 import java.util.List;
-import java.util.Optional;
 
 @Service
 public class EnrollmentService {
     private final EnrollmentRepository enrollmentRepository;
-    public EnrollmentService(EnrollmentRepository enrollmentRepository) {
+    private final StudentRepository studentRepository;
+    private final CourseRepository courseRepository;
+
+    public EnrollmentService(EnrollmentRepository enrollmentRepository, StudentRepository studentRepository, CourseRepository courseRepository) {
         this.enrollmentRepository = enrollmentRepository;
+        this.studentRepository = studentRepository;
+        this.courseRepository = courseRepository;
     }
 
     public String insertEnrollment(String studentId, String courseId) {
@@ -23,22 +28,18 @@ public class EnrollmentService {
             Long courseIdLong = Long.parseLong(courseId);
             if (studentIdLong <= 0 || courseIdLong <= 0) {
                 return "IDs devem ser números inteiros e positivos";
-            }else {
+            } else {
+                Student student = studentRepository.findById(studentIdLong).orElse(null);
+                Course course = courseRepository.findById(courseIdLong).orElse(null);
+                if (student == null || course == null) {
+                    return "Aluno ou curso não encontrados";
+                }
                 if (enrollmentRepository.findByStudentIdAndCourseId(studentIdLong, courseIdLong)) {
                     return "Matrícula já existe para o aluno e curso informados";
-                } else {
-                    Optional<Object> studentAndCourse = enrollmentRepository.findStudentAndCourseById(studentIdLong, courseIdLong);
-                    if(studentAndCourse.isEmpty()){
-                        return ("Aluno ou curso não encontrados");
-                    }else {
-                        Object[] result = (Object[]) studentAndCourse.get();
-                        Student student = new Student((String) result[1], (String) result[2], (LocalDate) result[3]);
-                        Course course = new Course((String) result[5], (String) result[6], (Integer) result[7]);
-                        Enrollment enrollment = new Enrollment(student, course);
-                        enrollmentRepository.save(enrollment);
-                        return "Matrícula inserida com sucesso";
-                    }
                 }
+                Enrollment enrollment = new Enrollment(student, course);
+                enrollmentRepository.save(enrollment);
+                return "Matrícula inserida com sucesso";
             }
         }catch (NumberFormatException e) {
             return "IDs devem ser números inteiros e positivos";
