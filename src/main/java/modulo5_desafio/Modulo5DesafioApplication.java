@@ -18,6 +18,7 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.ApplicationContext;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.Scanner;
 
 @SpringBootApplication
@@ -167,26 +168,18 @@ public class Modulo5DesafioApplication {
 
     protected static void findStudentByEmail() {
         System.out.println("\n=== Buscar Aluno por Email ===");
-        try {
-            System.out.print("Insira o email do aluno: ");
-            String email = scanner.nextLine();
-            if (email == null || email.isBlank()) {
-                System.err.println("O email não pode estar vazio. Tente novamente.");
-            } else if (!email.contains("@")) {
-                System.err.println("Email inválido. Tente novamente.");
-            } else {
-                Student student = studentRepository.findByEmail(email).orElse(null);
-                if (student != null) {
-                    System.out.println("ID: " + student.getId());
-                    System.out.println("Nome: " + student.getName());
-                    System.out.println("Email: " + student.getEmail());
-                    System.out.println("Data de nascimento(ANO-MÊS-DIA): " + student.getBirthDate());
-                } else {
-                    System.err.println("Nenhum aluno encontrado com o email: " + email);
-                }
-            }
-        } catch (Exception e) {
-            System.err.println("Erro ao buscar aluno por email: " + e.getMessage());
+        System.out.print("Insira o email do aluno: ");
+        String email = scanner.nextLine();
+        Optional<Student> student = studentService.getStudentByEmail(email);
+        if(student.isEmpty()){
+            System.err.println("Nenhum aluno encontrado com o email: " + email);
+        } else {
+            Student s = student.get();
+            System.out.println("ID: " + s.getId());
+            System.out.println("Nome: " + s.getName());
+            System.out.println("Email: " + s.getEmail());
+            System.out.println("Data de nascimento(ANO-MÊS-DIA): " + s.getBirthDate());
+            System.out.println("------------------------");
         }
     }
 

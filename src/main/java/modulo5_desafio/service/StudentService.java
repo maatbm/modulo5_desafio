@@ -7,6 +7,7 @@ import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class StudentService {
@@ -60,6 +61,20 @@ public class StudentService {
             return studentRepository.findAll();
         } catch (Exception e) {
             return List.of();
+        }
+    }
+
+    public Optional<Student> getStudentByEmail(String email) {
+        try {
+            if(email == null || email.isBlank()) {
+                return Optional.empty();
+            } else if (!email.contains("@")) {
+                return Optional.empty();
+            }else {
+                return studentRepository.findByEmail(email);
+            }
+        } catch (Exception e) {
+            return Optional.empty();
         }
     }
 
