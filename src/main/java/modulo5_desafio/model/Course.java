@@ -21,7 +21,9 @@ public class Course {
     @Column(name = "duration_hours", nullable = false)
     private Integer durationHours;
 
-    public Course() {}
+    public Course() {
+    }
+
     public Course(String title, String description, Integer durationHours) {
         this.title = title;
         this.description = description;

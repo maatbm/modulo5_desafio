@@ -22,7 +22,9 @@ public class Enrollment {
     @Column(name = "enrollment_date", insertable = false, updatable = false)
     private LocalDate enrollmentDate;
 
-    public Enrollment(){}
+    public Enrollment() {
+    }
+
     public Enrollment(Student student, Course course) {
         this.student = student;
         this.course = course;

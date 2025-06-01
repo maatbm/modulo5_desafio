@@ -25,7 +25,7 @@ public class EnrollmentService {
     }
 
     public String insertEnrollment(String studentId, String courseId) {
-        try{
+        try {
             Long studentIdLong = Long.parseLong(studentId);
             Long courseIdLong = Long.parseLong(courseId);
             if (studentIdLong <= 0 || courseIdLong <= 0) {
@@ -43,9 +43,9 @@ public class EnrollmentService {
                 enrollmentRepository.save(enrollment);
                 return "Matrícula inserida com sucesso";
             }
-        }catch (NumberFormatException e) {
+        } catch (NumberFormatException e) {
             return "IDs devem ser números inteiros e positivos";
-        }catch (Exception e){
+        } catch (Exception e) {
             return "Erro ao inserir matrícula: " + e.getMessage();
         }
     }
@@ -91,17 +91,17 @@ public class EnrollmentService {
     }
 
     public List<Enrollment> getActiveEnrollments() {
-        try{
+        try {
             return enrollmentRepository.findActiveEnrollments();
-        }catch (Exception e){
+        } catch (Exception e) {
             return List.of();
         }
     }
 
     public List<Enrollment> getDeletedEnrollments() {
-        try{
+        try {
             return enrollmentRepository.findDeletedEnrollments();
-        }catch (Exception e){
+        } catch (Exception e) {
             return List.of();
         }
     }
@@ -115,7 +115,7 @@ public class EnrollmentService {
     }
 
     public List<EngagementReportDTO> generateEngagementReport() {
-        try{
+        try {
             List<Object[]> results = enrollmentRepository.engagementReport();
             List<EngagementReportDTO> report = new ArrayList<>();
             for (Object[] result : results) {

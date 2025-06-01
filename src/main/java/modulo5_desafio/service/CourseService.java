@@ -10,31 +10,32 @@ import java.util.List;
 @Service
 public class CourseService {
     private final CourseRepository courseRepository;
+
     public CourseService(CourseRepository courseRepository) {
         this.courseRepository = courseRepository;
     }
 
     public String insertCourse(String title, String description, String duration) {
-        try{
+        try {
             int durationHours = Integer.parseInt(duration);
             if (title == null || title.isBlank() || description == null || description.isBlank() || durationHours <= 0) {
                 return ("Todos os campos devem estar preenchidos corretamente. Tente novamente.");
-            }else {
+            } else {
                 Course course = new Course(title, description, durationHours);
                 courseRepository.save(course);
                 return ("Curso criado com sucesso!");
             }
-        }catch (NumberFormatException e){
+        } catch (NumberFormatException e) {
             return ("A duração do curso deve ser um número inteiro positivo. Tente novamente.");
-        }catch (DataIntegrityViolationException e){
+        } catch (DataIntegrityViolationException e) {
             return ("Já existe um curso registrado com este título. Tente novamente.");
-        }catch (Exception e) {
+        } catch (Exception e) {
             return ("Ocorreu um erro ao criar o curso. Tente novamente.");
         }
     }
 
-    public String deleCourse(String id){
-        try{
+    public String deleCourse(String id) {
+        try {
             Long courseId = Long.parseLong(id);
             int deleted = courseRepository.softDeleteCourse(courseId);
             if (deleted == 1) {
@@ -42,15 +43,15 @@ public class CourseService {
             } else {
                 return ("Curso não encontrado ou já deletado.");
             }
-        }catch (NumberFormatException e){
+        } catch (NumberFormatException e) {
             return ("O ID do curso deve ser um número inteiro positivo. Tente novamente.");
-        }catch (Exception e){
+        } catch (Exception e) {
             return ("Ocorreu um erro ao deletar o curso. Tente novamente.");
         }
     }
 
-    public String restoreCourse(String id){
-        try{
+    public String restoreCourse(String id) {
+        try {
             Long courseId = Long.parseLong(id);
             int restored = courseRepository.restoreCourse(courseId);
             if (restored == 1) {
@@ -58,9 +59,9 @@ public class CourseService {
             } else {
                 return ("Curso não encontrado ou já ativo.");
             }
-        }catch (NumberFormatException e){
+        } catch (NumberFormatException e) {
             return ("O ID do curso deve ser um número inteiro positivo. Tente novamente.");
-        }catch (Exception e){
+        } catch (Exception e) {
             return ("Ocorreu um erro ao restaurar o curso. Tente novamente.");
         }
     }
@@ -79,11 +80,11 @@ public class CourseService {
                     return ("Curso não encontrado ou não foi possível atualizar.");
                 }
             }
-        }catch (NumberFormatException e) {
+        } catch (NumberFormatException e) {
             return ("O ID do curso e a duração devem ser números inteiros positivos. Tente novamente.");
-        }catch (DataIntegrityViolationException e){
+        } catch (DataIntegrityViolationException e) {
             return ("Já existe um curso registrado com este título. Tente novamente.");
-        }catch (Exception e) {
+        } catch (Exception e) {
             return ("Ocorreu um erro ao atualizar o curso. Tente novamente.");
         }
     }
@@ -91,7 +92,7 @@ public class CourseService {
     public List<Course> getActiveCourses() {
         try {
             return courseRepository.findActiveCourses();
-        }catch (Exception e){
+        } catch (Exception e) {
             return List.of();
         }
     }
@@ -99,7 +100,7 @@ public class CourseService {
     public List<Course> getDeletedCourses() {
         try {
             return courseRepository.findDeletedCourses();
-        }catch (Exception e){
+        } catch (Exception e) {
             return List.of();
         }
     }
@@ -107,7 +108,7 @@ public class CourseService {
     public List<Course> getAllCourses() {
         try {
             return courseRepository.findAll();
-        }catch (Exception e){
+        } catch (Exception e) {
             return List.of();
         }
     }

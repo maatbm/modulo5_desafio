@@ -17,8 +17,8 @@ public class StudentService {
         this.studentRepository = studentRepository;
     }
 
-    public String insertStudent(String name, String email, String birthDate){
-        try{
+    public String insertStudent(String name, String email, String birthDate) {
+        try {
             LocalDate date = LocalDate.parse(birthDate);
             if (name == null || name.isBlank() || email == null || email.isBlank()) {
                 return ("Todos os campos devem estar preenchidos. Tente novamente.");
@@ -31,16 +31,16 @@ public class StudentService {
                 studentRepository.save(student);
                 return ("Aluno registrado com sucesso!");
             }
-        }catch (NumberFormatException e) {
+        } catch (NumberFormatException e) {
             return ("Formato de data inválido. Use o formato AAAA-MM-DD.");
-        }catch (DataIntegrityViolationException e) {
+        } catch (DataIntegrityViolationException e) {
             return ("Já existe um aluno registrado com este email. Tente novamente.");
-        }catch (Exception e) {
+        } catch (Exception e) {
             return ("Ocorreu um erro ao registrar o aluno: " + e.getMessage());
         }
     }
 
-    public List<Student> getActiveStudents(){
+    public List<Student> getActiveStudents() {
         try {
             return studentRepository.findActiveStudents();
         } catch (Exception e) {
@@ -48,7 +48,7 @@ public class StudentService {
         }
     }
 
-    public List<Student> getDeletedStudents(){
+    public List<Student> getDeletedStudents() {
         try {
             return studentRepository.findDeletedStudents();
         } catch (Exception e) {
@@ -66,11 +66,11 @@ public class StudentService {
 
     public Optional<Student> getStudentByEmail(String email) {
         try {
-            if(email == null || email.isBlank()) {
+            if (email == null || email.isBlank()) {
                 return Optional.empty();
             } else if (!email.contains("@")) {
                 return Optional.empty();
-            }else {
+            } else {
                 return studentRepository.findByEmail(email);
             }
         } catch (Exception e) {
@@ -82,14 +82,14 @@ public class StudentService {
         try {
             Long studentId = Long.parseLong(id);
             int deleted = studentRepository.softDeleteStudentById(studentId);
-            if(deleted == 1) {
+            if (deleted == 1) {
                 return "Aluno deletado com sucesso!";
             } else {
                 return "Aluno não encontrado ou já deletado.";
             }
-        }catch (NumberFormatException e){
+        } catch (NumberFormatException e) {
             return "ID inválido. Por favor, insira um número válido.";
-        }catch (Exception e) {
+        } catch (Exception e) {
             return "Erro ao deletar aluno: " + e.getMessage();
         }
     }
@@ -98,7 +98,7 @@ public class StudentService {
         try {
             Long studentId = Long.parseLong(id);
             int restored = studentRepository.restoreStudentById(studentId);
-            if(restored == 1) {
+            if (restored == 1) {
                 return "Aluno restaurado com sucesso!";
             } else {
                 return "Aluno não encontrado ou já ativo.";
@@ -120,19 +120,19 @@ public class StudentService {
                 return ("Data de nascimento não pode ser no futuro. Tente novamente.");
             } else if (!email.contains("@")) {
                 return ("Email inválido. Tente novamente.");
-            }else {
+            } else {
                 int updated = studentRepository.updateStudentById(studentId, name, email, date);
-                if(updated == 1) {
+                if (updated == 1) {
                     return ("Aluno atualizado com sucesso!");
-                }else {
+                } else {
                     return ("Ocorreu um erro ao atualizar o aluno. Verifique se o ID está correto.");
                 }
             }
-        }catch (NumberFormatException e) {
+        } catch (NumberFormatException e) {
             return ("Formato de data ou ID invválido. Use o formato AAAA-MM-DD para data e inteiros positivos para ID.");
-        }catch (DataIntegrityViolationException e) {
+        } catch (DataIntegrityViolationException e) {
             return ("Já existe um aluno registrado com este email. Tente novamente.");
-        }catch (Exception e) {
+        } catch (Exception e) {
             return ("Ocorreu um erro ao atualizar o aluno: " + e.getMessage());
         }
     }
