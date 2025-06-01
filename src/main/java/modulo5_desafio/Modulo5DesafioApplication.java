@@ -1,6 +1,7 @@
 package modulo5_desafio;
 
 import io.github.cdimascio.dotenv.Dotenv;
+import modulo5_desafio.DTO.EngagementReportDTO;
 import modulo5_desafio.model.Course;
 import modulo5_desafio.model.Enrollment;
 import modulo5_desafio.model.Student;
@@ -404,23 +405,18 @@ public class Modulo5DesafioApplication {
 
     protected static void generateEngagementReport() {
         System.out.println("\n=== Relatório de Engajamento ===");
-        List<Object[]> reportData = enrollmentService.generateEngagementReport();
-        if (reportData.isEmpty()) {
-            System.err.println("Nenhum dado de engajamento encontrado.");
+        List<EngagementReportDTO> report = enrollmentService.generateEngagementReport();
+        if (report.isEmpty()) {
+            System.err.println("Nenhum dado encontrado para gerar o relatório de engajamento.");
         } else {
-            for (Object[] row : reportData) {
-                long courseId = row[0] != null ? ((Number) row[0]).longValue() : 0L;
-                String courseTitle = (String) row[1];
-                long totalEnrollments = row[2] != null ? ((Number) row[2]).longValue() : 0L;
-                double averageAge = row[3] != null ? ((Number) row[3]).doubleValue() : 0.0;
-                long recentEnrollments = row[4] != null ? ((Number) row[4]).longValue() : 0L;
-                System.out.println("Curso ID: " + courseId);
-                System.out.println("Título do Curso: " + courseTitle);
-                System.out.println("Total de Matrículas: " + totalEnrollments);
-                System.out.println("Idade Média dos Alunos: " + averageAge);
-                System.out.println("Matrículas Recentes (últimos 30 dias): " + recentEnrollments);
+            report.forEach(r -> {
+                System.out.println("ID do Curso: " + r.courseId());
+                System.out.println("Título do Curso: " + r.courseTitle());
+                System.out.println("Total de Matrículas: " + r.totalEnrollments());
+                System.out.println("Idade Média dos Alunos: " + r.averageAge());
+                System.out.println("Matrículas Recentes (últimos 30 dias): " + r.recentEnrollments());
                 System.out.println("------------------------");
-            }
+            });
         }
     }
 }

@@ -1,5 +1,6 @@
 package modulo5_desafio.service;
 
+import modulo5_desafio.DTO.EngagementReportDTO;
 import modulo5_desafio.model.Course;
 import modulo5_desafio.model.Enrollment;
 import modulo5_desafio.model.Student;
@@ -8,6 +9,7 @@ import modulo5_desafio.repository.StudentRepository;
 import modulo5_desafio.repository.CourseRepository;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Service
@@ -112,9 +114,20 @@ public class EnrollmentService {
         }
     }
 
-    public List<Object[]> generateEngagementReport() {
-        try {
-            return enrollmentRepository.engagementReport();
+    public List<EngagementReportDTO> generateEngagementReport() {
+        try{
+            List<Object[]> results = enrollmentRepository.engagementReport();
+            List<EngagementReportDTO> report = new ArrayList<>();
+            for (Object[] result : results) {
+                Long courseId = ((Number) result[0]).longValue();
+                String courseTitle = (String) result[1];
+                Long totalEnrollments = ((Number) result[2]).longValue();
+                Double averageAge = ((Number) result[3]).doubleValue();
+                Long recentEnrollments = ((Number) result[4]).longValue();
+                EngagementReportDTO dto = new EngagementReportDTO(courseId, courseTitle, totalEnrollments, averageAge, recentEnrollments);
+                report.add(dto);
+            }
+            return report;
         } catch (Exception e) {
             return List.of();
         }
