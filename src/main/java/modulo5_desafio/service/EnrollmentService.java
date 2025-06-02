@@ -31,10 +31,10 @@ public class EnrollmentService {
             if (studentIdLong <= 0 || courseIdLong <= 0) {
                 return "IDs devem ser números inteiros e positivos";
             } else {
-                Student student = studentRepository.findById(studentIdLong).orElse(null);
-                Course course = courseRepository.findById(courseIdLong).orElse(null);
+                Student student = studentRepository.findByIdAndDeletedFalse(studentIdLong).orElse(null);
+                Course course = courseRepository.findByIdAndDeletedFalse(courseIdLong).orElse(null);
                 if (student == null || course == null) {
-                    return "Aluno ou curso não encontrados";
+                    return "Aluno ou curso não encontrados ou deletados";
                 }
                 if (enrollmentRepository.findByStudentIdAndCourseId(studentIdLong, courseIdLong)) {
                     return "Matrícula já existe para o aluno e curso informados";

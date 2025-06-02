@@ -32,5 +32,8 @@ public interface StudentRepository extends JpaRepository<Student, Long> {
     @NativeQuery(value = "UPDATE students SET name = ?2, email = ?3, birth_date = ?4 WHERE id = ?1")
     int updateStudentById(Long id, String name, String email, LocalDate birthDate);
 
+    @NativeQuery(value = "SELECT s.id, s.name, s.email, s.birth_date FROM students s WHERE id = ?1 AND deleted = false")
+    Optional<Student> findByIdAndDeletedFalse(Long id);
+
     Optional<Student> findByEmail(String email);
 }
